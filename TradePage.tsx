@@ -134,12 +134,8 @@ function TradePageInner() {
           switchToLiveMarkets={() => setHandleDeprecated(false)}
         />
       );
-    } else if (width < 1000) {
-      return <RenderSmaller {...componentProps} />;
-    } else if (width < 1450) {
+    } else if (width < 1400) {
       return <RenderSmall {...componentProps} />;
-    } else {
-      return <RenderNormal {...componentProps} />;
     }
   })();
 
@@ -346,116 +342,46 @@ const DeprecatedMarketsPage = ({ switchToLiveMarkets }) => {
 };
 
 
-const RenderNormal = ({ onChangeOrderRef, onPrice, onSize }) => {
-  return (
-    <Row
-      style={{
-        minHeight: '500px',
-        flexWrap: 'nowrap',
-      }}
-    >
-      <Col flex="auto" style={{ height: '100%' }}>
-        
-        <CoinHeader/>
-        <Col style={{height: "60vh" }}>
-        <TVChartContainer />
-        </Col>
-        <Row style={{ height: '100%' }}>
-          <UserInfoTable />
-        </Row>
-      </Col>
-      <Col flex={'360px'} style={{ height: '100%' }}>
-        <Orderbook smallScreen={false} onPrice={onPrice} onSize={onSize} />
-        <TradesTable smallScreen={false} />
-      </Col>
-      <Col
-        flex="400px"
-        style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-      >
-        <TradeForm setChangeOrderRef={onChangeOrderRef} />
-        <StandaloneBalancesDisplay />
-      </Col>
-    </Row>
-  );
-};
-
 const RenderSmall = ({ onChangeOrderRef, onPrice, onSize }) => {
   return (
     <>
-      <Row>
-      <Col flex = 'auto'>
-        <CoinHeader/>
-        <Col style={{ height: '60vh'}}>
+    <Row>
+      <Col flex="auto" style={{ width: "70%" }}>
+        
+        <CoinHeader/>  
+        <Col style={{height: "60vh"}}>
         <TVChartContainer />
         </Col>
-        </Col>
-
-      </Row>
-      <Row
-        style={{
-          height: '900px',
-        }}
-      >
-        <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
+        
+      </Col>
+      <Col flex="initial" style={{ height: '60%', width: "30%" }}>
+          
+         <Row>
           <Orderbook
             smallScreen={true}
-            depth={13}
+            depth={6}
             onPrice={onPrice}
             onSize={onSize}
           />
-        </Col>
-        <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
+        
+          
           <TradesTable smallScreen={true} />
-        </Col>
-        <Col
-          flex="400px"
-          style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-        >
+          </Row>
+      </Col>
+      
+      <Row
+          >
+          <Col>
           <TradeForm setChangeOrderRef={onChangeOrderRef} />
           <StandaloneBalancesDisplay />
-        </Col>
-      </Row>
-      <Row>
-        <Col flex="auto">
+          </Col>
           <UserInfoTable />
-        </Col>
       </Row>
-    </>
-  );
-};
+      
 
-const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
-  return (
-    <>
-      <Row style={{ height: '100vh' }}>
-      <CoinHeader/>
-        <TVChartContainer />
-      </Row>
-      <Row>
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <TradeForm style={{ flex: 1 }} setChangeOrderRef={onChangeOrderRef} />
-        </Col>
-        <Col xs={24} sm={12}>
-          <StandaloneBalancesDisplay />
-        </Col>
-      </Row>
-      <Row
-        style={{
-          height: '500px',
-        }}
-      >
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <Orderbook smallScreen={true} onPrice={onPrice} onSize={onSize} />
-        </Col>
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <TradesTable smallScreen={true} />
-        </Col>
-      </Row>
-      <Row>
-        <Col flex="auto">
-          <UserInfoTable />
-        </Col>
-      </Row>
+    
+    </Row>
+   
     </>
   );
 };
