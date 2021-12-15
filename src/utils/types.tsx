@@ -3,6 +3,9 @@ import { Market, OpenOrders } from '@project-serum/serum';
 import { Event } from '@project-serum/serum/lib/queue';
 import { Order } from '@project-serum/serum/lib/market';
 import { WalletAdapter } from '../wallet-adapters';
+export const CURRENCY_KEY = 'currency_v2'
+export const PROJECT_COMMUNITY_HOMEPAGE_KEY = 'HOMEPAGE'
+export const PROJECT_COMMUNITY_TWITTER_KEY = 'TWITTER'
 
 export interface ConnectionContextValues {
   endpoint: string;
@@ -22,13 +25,30 @@ export interface WalletContextValues {
   select: () => void;
 }
 
+export interface DexLabMarketInfo {
+  address: PublicKey
+  nameEn: string
+  nameKo: string
+  symbol: string
+  icon: any
+  nftImageUrl?: string
+  programId: PublicKey
+  quoteLabel: string
+  baseLabel: string
+  deprecated: boolean
+  chart: boolean
+  chartType?: string | undefined
+  type: string
+  isNew: boolean
+}
+
 export interface MarketInfo {
-  address: PublicKey;
-  name: string;
-  programId: PublicKey;
-  deprecated: boolean;
-  quoteLabel?: string;
-  baseLabel?: string;
+  address: PublicKey
+  name: string
+  programId: PublicKey
+  deprecated: boolean
+  quoteLabel?: string
+  baseLabel?: string
 }
 
 export interface CustomMarketInfo {
@@ -132,7 +152,7 @@ export interface SelectedTokenAccounts {
 export interface BonfidaTrade {
   market: string;
   size: number;
-  price: number;
+  price: number
   orderId: string;
   time: number;
   side: string;

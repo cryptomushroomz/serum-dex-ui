@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown, Menu } from 'antd';
+import { Dropdown, Menu, Button } from 'antd';
 import { useWallet } from '../utils/wallet';
 import LinkAddress from './LinkAddress';
 
@@ -17,8 +17,8 @@ export default function WalletConnect() {
   );
 
   return (
-    <Dropdown.Button onClick={connected ? disconnect : connect} overlay={menu}>
+    <Button onClick={connected ? disconnect : connect} type="primary" shape="round">
       {connected ? 'Disconnect' : 'Connect'}
-    </Dropdown.Button>
+    </Button>
   );
 }

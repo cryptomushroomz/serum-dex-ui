@@ -199,7 +199,7 @@ const OrderbookRow = React.memo(
     isEqual(prevProps, nextProps, ['price', 'size', 'sizePercent']),
 );
 
-const MarkPriceComponent = React.memo(
+export const MarkPriceComponent = React.memo(
   ({ markPrice }) => {
     const { market } = useMarket();
     const previousMarkPrice = usePrevious(markPrice);

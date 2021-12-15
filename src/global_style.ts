@@ -1,8 +1,9 @@
 import { createGlobalStyle } from 'styled-components';
+import bg from './bg.png';
 
 export const GlobalStyle = createGlobalStyle`
 html,body{
-  background: #11161D;
+  background: url(${bg});
 }
 input[type=number]::-webkit-inner-spin-button {
   opacity: 0;
@@ -17,30 +18,30 @@ input[type=number]:focus::-webkit-inner-spin-button {
 }
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #2d313c;
+  background: #ebae37;
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #5b5f67;
+  background: #4a708B;
 }
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #5b5f67;
+  background: #4a708B;
 }
 .ant-slider-track, .ant-slider:hover .ant-slider-track {
-  background-color: #2abdd2;
+  background-color: #ebae37;
   opacity: 0.75;
 }
 .ant-slider-track,
 .ant-slider ant-slider-track:hover {
-  background-color: #2abdd2;
+  background-color: #ebae37;
   opacity: 0.75;
 }
 .ant-slider-dot-active,
 .ant-slider-handle,
 .ant-slider-handle-click-focused,
 .ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open)  {
-  border: 2px solid #2abdd2; 
+  border: 2px solid #ebae37; 
 }
 .ant-table-tbody > tr.ant-table-row:hover > td {
   background: #273043;
@@ -73,16 +74,16 @@ input[type=number]:focus::-webkit-inner-spin-button {
 }
 
 @-webkit-keyframes highlight {
-  from { background-color: #2abdd2;}
-  to {background-color: #1A2029;}
+  from { background-color: #ebae37;}
+  to {background-color: #ebae37;}
 }
 @-moz-keyframes highlight {
-  from { background-color: #2abdd2;}
-  to {background-color: #1A2029;}
+  from { background-color: #ebae37;}
+  to {background-color: #ebae37;}
 }
 @-keyframes highlight {
-  from { background-color: #2abdd2;}
-  to {background-color: #1A2029;}
+  from { background-color: #ebae37;}
+  to {background-color: #ebae37;}
 }
 .flash {
   -moz-animation: highlight 0.5s ease 0s 1 alternate ;

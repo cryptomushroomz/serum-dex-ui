@@ -9,8 +9,12 @@ import {
   getTradePageUrl,
   MarketProvider,
   useMarket,
+  useMarketInfos,
   useMarketsList,
+  useMarkPrice,
+  useSelectedBaseCurrencyAccount,
   useUnmigratedDeprecatedMarkets,
+  getMarketOrderPrice,
 } from '../utils/markets';
 import TradeForm from '../components/TradeForm';
 import TradesTable from '../components/TradesTable';
@@ -25,16 +29,24 @@ import CustomMarketDialog from '../components/CustomMarketDialog';
 import { notify } from '../utils/notifications';
 import { useHistory, useParams } from 'react-router-dom';
 import { nanoid } from 'nanoid';
+import CoinHeader from '../components/CoinHeader';
 
 import { TVChartContainer } from '../components/TradingView';
+import { Market } from '@project-serum/serum';
+import { basename } from 'path';
 // Use following stub for quick setup without the TradingView private dependency
 // function TVChartContainer() {
 //   return <></>
 // }
 
+
+
+
 const { Option, OptGroup } = Select;
 
+
 const Wrapper = styled.div`
+  background-color: #000000;  
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -84,7 +96,7 @@ function TradePageInner() {
   });
 
   useEffect(() => {
-    document.title = marketName ? `${marketName} — Serum` : 'Serum';
+    document.title = marketName ? `${marketName} — SHROOMZDEX` : 'SHROOMZDEX';
   }, [marketName]);
 
   const changeOrderRef = useRef<
@@ -122,12 +134,8 @@ function TradePageInner() {
           switchToLiveMarkets={() => setHandleDeprecated(false)}
         />
       );
-    } else if (width < 1000) {
-      return <RenderSmaller {...componentProps} />;
-    } else if (width < 1450) {
+    } else if (width < 1400) {
       return <RenderSmall {...componentProps} />;
-    } else {
-      return <RenderNormal {...componentProps} />;
     }
   })();
 
@@ -182,13 +190,13 @@ function TradePageInner() {
                 title="Market address"
                 trigger="click"
               >
-                <InfoCircleOutlined style={{ color: '#2abdd2' }} />
+                <InfoCircleOutlined style={{ color: '#ebae37' }} />
               </Popover>
             </Col>
           ) : null}
           <Col>
             <PlusCircleOutlined
-              style={{ color: '#2abdd2' }}
+              style={{ color: '#ebae37' }}
               onClick={() => setAddMarketVisible(true)}
             />
           </Col>
@@ -214,7 +222,7 @@ function TradePageInner() {
   );
 }
 
-function MarketSelector({
+export function MarketSelector({
   markets,
   placeholder,
   setHandleDeprecated,
@@ -242,7 +250,7 @@ function MarketSelector({
     <Select
       showSearch
       size={'large'}
-      style={{ width: 200 }}
+      style={{ width: 300 }}
       placeholder={placeholder || 'Select a market'}
       optionFilterProp="name"
       onSelect={onSetMarketAddress}
@@ -333,107 +341,48 @@ const DeprecatedMarketsPage = ({ switchToLiveMarkets }) => {
   );
 };
 
-const RenderNormal = ({ onChangeOrderRef, onPrice, onSize }) => {
-  return (
-    <Row
-      style={{
-        minHeight: '900px',
-        flexWrap: 'nowrap',
-      }}
-    >
-      <Col flex="auto" style={{ height: '50vh' }}>
-        <Row style={{ height: '100%' }}>
-          <TVChartContainer />
-        </Row>
-        <Row style={{ height: '70%' }}>
-          <UserInfoTable />
-        </Row>
-      </Col>
-      <Col flex={'360px'} style={{ height: '100%' }}>
-        <Orderbook smallScreen={false} onPrice={onPrice} onSize={onSize} />
-        <TradesTable smallScreen={false} />
-      </Col>
-      <Col
-        flex="400px"
-        style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-      >
-        <TradeForm setChangeOrderRef={onChangeOrderRef} />
-        <StandaloneBalancesDisplay />
-      </Col>
-    </Row>
-  );
-};
 
 const RenderSmall = ({ onChangeOrderRef, onPrice, onSize }) => {
   return (
     <>
-      <Row style={{ height: '30vh' }}>
+    <Row>
+      <Col flex="auto" style={{ width: "70%" }}>
+        
+        <CoinHeader/>  
+        <Col style={{height: "60vh"}}>
         <TVChartContainer />
-      </Row>
-      <Row
-        style={{
-          height: '900px',
-        }}
-      >
-        <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
+        </Col>
+        
+      </Col>
+      <Col flex="initial" style={{ height: '60%', width: "30%" }}>
+          
+         <Row>
           <Orderbook
             smallScreen={true}
-            depth={13}
+            depth={6}
             onPrice={onPrice}
             onSize={onSize}
           />
-        </Col>
-        <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
+        
+          
           <TradesTable smallScreen={true} />
-        </Col>
-        <Col
-          flex="400px"
-          style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-        >
+          </Row>
+      </Col>
+      
+      <Row
+          >
+          <Col>
           <TradeForm setChangeOrderRef={onChangeOrderRef} />
           <StandaloneBalancesDisplay />
-        </Col>
-      </Row>
-      <Row>
-        <Col flex="auto">
+          </Col>
           <UserInfoTable />
-        </Col>
       </Row>
+      
+
+    
+    </Row>
+   
     </>
   );
 };
 
-const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
-  return (
-    <>
-      <Row style={{ height: '50vh' }}>
-        <TVChartContainer />
-      </Row>
-      <Row>
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <TradeForm style={{ flex: 1 }} setChangeOrderRef={onChangeOrderRef} />
-        </Col>
-        <Col xs={24} sm={12}>
-          <StandaloneBalancesDisplay />
-        </Col>
-      </Row>
-      <Row
-        style={{
-          height: '500px',
-        }}
-      >
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <Orderbook smallScreen={true} onPrice={onPrice} onSize={onSize} />
-        </Col>
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <TradesTable smallScreen={true} />
-        </Col>
-      </Row>
-      <Row>
-        <Col flex="auto">
-          <UserInfoTable />
-        </Col>
-      </Row>
-    </>
-  );
-};
