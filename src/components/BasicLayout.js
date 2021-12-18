@@ -1,6 +1,7 @@
 import { Layout } from 'antd';
 import React, { useEffect } from 'react';
 import TopBar from './TopBar';
+import TopBarnew from './TopBarnew';
 import { CustomFooter as Footer } from './Footer';
 import { useReferrer } from '../utils/referrer';
 import queryString from 'query-string';
@@ -26,7 +27,7 @@ export default function BasicLayout({ children }) {
         style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
       >
         <Header style={{ padding: 0, minHeight: 64, height: 'unset' }}>
-          <TopBar />
+          <TopBarnew />
         </Header>
         <Content style={{ flex: 1 }}>{children}</Content>
         <Footer />

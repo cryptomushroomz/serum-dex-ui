@@ -5,6 +5,44 @@ import { useMarket, useBonfidaTrades } from '../utils/markets';
 import { getDecimalCount } from '../utils/utils';
 import FloatingElement from './layout/FloatingElement';
 import { BonfidaTrade } from '../utils/types';
+import { alpha, createTheme, ThemeProvider } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
 const Title = styled.div`
   color: rgba(255, 255, 255, 1);
@@ -19,19 +57,25 @@ export default function PublicTrades({ smallScreen }) {
   const [trades, loaded] = useBonfidaTrades();
 
   return (
-    <FloatingElement
-      style={ 
-        smallScreen
-          ? { flex: 1 }
-          : {
-              marginTop: '10px',
-              minHeight: '170px',
-              maxHeight: 'calc(100vh - 700px)',
-             
-            }
-      }
-    >
-      <Title>Recent Market trades</Title>
+    
+
+    <React.Fragment>
+    <ThemeProvider theme={darkTheme}>  
+    <Card style={
+      smallScreen
+      ? { flex: 1, margin: "10px" }
+      : {
+          marginTop: '10px',
+          minHeight: '170px',
+          maxHeight: 'calc(100vh - 700px)',
+          margin: "10px"
+        }}>
+    
+      <CardContent >    
+      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+
+        Recent Market Trades
+        
       <SizeTitle>
         <Col span={8}>Price ({quoteCurrency}) </Col>
         <Col span={8} style={{ textAlign: 'right' }}>
@@ -80,6 +124,10 @@ export default function PublicTrades({ smallScreen }) {
           ))}
         </div>
       )}
-    </FloatingElement>
+      </Typography>
+    </CardContent>
+    </Card>
+    </ThemeProvider>
+    </React.Fragment>
   );
 }

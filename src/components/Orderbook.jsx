@@ -7,6 +7,44 @@ import { useInterval } from '../utils/useInterval';
 import FloatingElement from './layout/FloatingElement';
 import usePrevious from '../utils/usePrevious';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { alpha, createTheme, ThemeProvider } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
 const Title = styled.div`
   color: rgba(255, 255, 255, 1);
@@ -106,44 +144,58 @@ export default function Orderbook({ smallScreen, depth = 7, onPrice, onSize }) {
   }
 
   return (
-    <FloatingElement
-      style={
-        smallScreen ? { flex: 1 } : { height: '500px', overflow: 'hidden' }
-      }
-    >
-      <Title>Orderbook</Title>
-      <SizeTitle>
-        <Col span={12} style={{ textAlign: 'left' }}>
-          Size ({baseCurrency})
-        </Col>
-        <Col span={12} style={{ textAlign: 'right' }}>
-          Price ({quoteCurrency})
-        </Col>
-      </SizeTitle>
-      {orderbookData?.asks.map(({ price, size, sizePercent }) => (
-        <OrderbookRow
-          key={price + ''}
-          price={price}
-          size={size}
-          side={'sell'}
-          sizePercent={sizePercent}
-          onPriceClick={() => onPrice(price)}
-          onSizeClick={() => onSize(size)}
-        />
-      ))}
-      <MarkPriceComponent markPrice={markPrice} />
-      {orderbookData?.bids.map(({ price, size, sizePercent }) => (
-        <OrderbookRow
-          key={price + ''}
-          price={price}
-          size={size}
-          side={'buy'}
-          sizePercent={sizePercent}
-          onPriceClick={() => onPrice(price)}
-          onSizeClick={() => onSize(size)}
-        />
-      ))}
-    </FloatingElement>
+    <React.Fragment>
+      <ThemeProvider theme={darkTheme}>
+        <Card
+          style={
+            smallScreen
+              ? { flex: 1, margin: '10px' }
+              : { height: '500px', overflow: 'hidden', margin: '10px' }
+          }
+        >
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Oderbook
+              <SizeTitle>
+                <Col span={12} style={{ textAlign: 'left' }}>
+                  Size ({baseCurrency})
+                </Col>
+                <Col span={12} style={{ textAlign: 'right' }}>
+                  Price ({quoteCurrency})
+                </Col>
+              </SizeTitle>
+              {orderbookData?.asks.map(({ price, size, sizePercent }) => (
+                <OrderbookRow
+                  key={price + ''}
+                  price={price}
+                  size={size}
+                  side={'sell'}
+                  sizePercent={sizePercent}
+                  onPriceClick={() => onPrice(price)}
+                  onSizeClick={() => onSize(size)}
+                />
+              ))}
+              <MarkPriceComponent markPrice={markPrice} />
+              {orderbookData?.bids.map(({ price, size, sizePercent }) => (
+                <OrderbookRow
+                  key={price + ''}
+                  price={price}
+                  size={size}
+                  side={'buy'}
+                  sizePercent={sizePercent}
+                  onPriceClick={() => onPrice(price)}
+                  onSizeClick={() => onSize(size)}
+                />
+              ))}
+            </Typography>
+          </CardContent>
+        </Card>
+      </ThemeProvider>
+    </React.Fragment>
   );
 }
 

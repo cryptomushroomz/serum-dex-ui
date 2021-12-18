@@ -21,6 +21,44 @@ import {getUnixTs, placeOrder} from '../utils/send';
 import {SwitchChangeEventHandler} from 'antd/es/switch';
 import {refreshCache} from '../utils/fetch-loop';
 import tuple from 'immutable-tuple';
+import { alpha, createTheme, ThemeProvider } from '@mui/material/styles';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
 
 const SellButton = styled(Button)`
   margin: 20px 0px 0px 0px;
@@ -273,9 +311,13 @@ export default function TradeForm({
   }
 
   return (
-    <FloatingElement
-      style={{ display: 'flex', flexDirection: 'column', ...style }}
-    >
+    <React.Fragment>
+    <ThemeProvider theme={darkTheme}>  
+    <Card style={{ display: 'flex', margin: "10px", flexDirection: 'column', ...style }}>
+    
+      <CardContent >    
+      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+
       <div style={{ flex: 1 }}>
         <Radio.Group
           onChange={(e) => setSide(e.target.value)}
@@ -385,6 +427,10 @@ export default function TradeForm({
           Sell {baseCurrency}
         </SellButton>
       )}
-    </FloatingElement>
+    </Typography>
+    </CardContent>
+    </Card>
+    </ThemeProvider>
+    </React.Fragment>
   );
-}
+      }

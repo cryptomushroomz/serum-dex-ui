@@ -15,6 +15,7 @@ import {
   useSelectedBaseCurrencyAccount,
   useUnmigratedDeprecatedMarkets,
   getMarketOrderPrice,
+  USE_MARKETS,
 } from '../utils/markets';
 import TradeForm from '../components/TradeForm';
 import TradesTable from '../components/TradesTable';
@@ -29,11 +30,12 @@ import CustomMarketDialog from '../components/CustomMarketDialog';
 import { notify } from '../utils/notifications';
 import { useHistory, useParams } from 'react-router-dom';
 import { nanoid } from 'nanoid';
-import CoinHeader from '../components/CoinHeader';
+import CoinHeader from '../components/CoinHeadernew';
 
 import { TVChartContainer } from '../components/TradingView';
 import { Market } from '@project-serum/serum';
 import { basename } from 'path';
+import MarketSelect from '../components/Marketselect';
 // Use following stub for quick setup without the TradingView private dependency
 // function TVChartContainer() {
 //   return <></>
@@ -73,12 +75,13 @@ export default function TradePage() {
       marketAddress={marketAddress}
       setMarketAddress={setMarketAddress}
     >
+
       <TradePageInner />
     </MarketProvider>
   );
 }
 
-function TradePageInner() {
+export function TradePageInner() {
   const {
     market,
     marketName,
@@ -169,14 +172,15 @@ function TradePageInner() {
       <CustomMarketDialog
         visible={addMarketVisible}
         onClose={() => setAddMarketVisible(false)}
-        onAddCustomMarket={onAddCustomMarket}
+        onAddCustomMarket={onAddCustomMarket}    
       />
       <Wrapper>
         <Row
           align="middle"
           style={{ paddingLeft: 5, paddingRight: 5 }}
           gutter={16}
-        >
+        > 
+          
           <Col>
             <MarketSelector
               markets={markets}
@@ -186,7 +190,7 @@ function TradePageInner() {
               onDeleteCustomMarket={onDeleteCustomMarket}
             />
           </Col>
-          {market ? (
+                    {market ? (
             <Col>
               <Popover
                 content={<LinkAddress address={market.publicKey.toBase58()} />}
@@ -385,10 +389,10 @@ const RenderSmall = ({ onChangeOrderRef, onPrice, onSize }) => {
       <Row>
       <Col flex = 'auto'>
         <CoinHeader/>
-        <Col style={{ height: '60vh'}}>
-        <TVChartContainer />
-        </Col>
-        </Col>
+      <div style={{ height: '60vh', margin: '20px'}}>
+      <TVChartContainer />
+      </div>
+      </Col>
 
       </Row>
       <Row
@@ -429,7 +433,7 @@ const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
     <>
       <Row style={{ height: '100vh' }}>
       <CoinHeader/>
-        <TVChartContainer />
+         <TVChartContainer />
       </Row>
       <Row>
         <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
