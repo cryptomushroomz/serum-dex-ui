@@ -96,6 +96,13 @@ export default function CoinHeader() {
   });
   const { t: trText, i18n } = useTranslation();
 
+  let lowPrice = 0;
+  let highPrice = 0;
+  let volume = 0;
+  lowPrice = marketDayVolume?.summary?.lowPrice;
+  highPrice = marketDayVolume?.summary?.highPrice;
+  volume = marketDayVolume?.summary?.totalVolume;
+
   let avatar = `https://github.com/solana-labs/token-list/blob/main/assets/mainnet/${mintAddress}/logo.png?raw=true`;
   let tickSize = market?.tickSize && getDecimalCount(market.tickSize);
 
@@ -171,7 +178,7 @@ export default function CoinHeader() {
                         fontWeight: 'bold',
                       }}
                     >
-                      {markPrice}
+                      {highPrice && highPrice}
                     </div>
                     <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
                       {trText('volume_24h')}
@@ -180,7 +187,7 @@ export default function CoinHeader() {
                       className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
                       style={{ borderBottom: `1px solid` }}
                     >
-                      {marketDayVolume?.summary?.totalVolume}{' '}
+                      {volume && volume}{' '}
                       <span
                         style={{
                           fontSize: '11px',
@@ -205,7 +212,7 @@ export default function CoinHeader() {
                         fontWeight: 'bold',
                       }}
                     >
-                      {markPrice}
+                      {lowPrice && lowPrice}
                     </div>
                     <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
                       {trText('volume_price_24h')}
@@ -214,7 +221,7 @@ export default function CoinHeader() {
                       className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
                       style={{ borderBottom: `1px solid` }}
                     >
-                      {markPrice}{' '}
+                      {volume && volume}{' '}
                       <span
                         style={{
                           fontSize: '11px',

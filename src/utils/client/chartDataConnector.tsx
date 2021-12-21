@@ -17,7 +17,7 @@ export const DEXLAB_CHART_API_HOST = 'https://tv-api.dexlab.space'
 
 function getHostUrl() {
   // endpoint 랜덤 배정
-  const getEndpointRand = `${DEXLAB_CHART_API_HOST}/v1/trade-history`
+  const getEndpointRand = `${DEXLAB_CHART_API_HOST}/v1/volumes/`
 }
 
 
@@ -53,7 +53,7 @@ export default class ChartApi {
         console.log(`Error retry fetching from Chart API ${path}: ${err}`)
       }
     }
-    let addresss = "9wFFyRfZBsuAha4YcuxcXLKwMxJR43S7fPfQLusDBzvT"
+    let addresss = "E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA"
 
     return null
   }
