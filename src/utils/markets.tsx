@@ -186,6 +186,9 @@ const SHROOMZ_MARKETS = [
   },
 ];
 
+export function getTokenSymbolImageUrl(quote: string) {
+  return `https://github.com/solana-labs/token-list/tree/main/assets/mainnet/${quote.toLowerCase()}/logo.png?raw=true`
+}
 
 
   
