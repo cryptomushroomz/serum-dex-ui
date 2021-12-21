@@ -17,7 +17,7 @@ export const DEXLAB_CHART_API_HOST = 'https://tv-api.dexlab.space'
 
 function getHostUrl() {
   // endpoint 랜덤 배정
-  const getEndpointRand = `${DEXLAB_CHART_API_HOST}/v1/volumes/`
+  const getEndpointRand = `${DEXLAB_API_HOST}/v1/trade-history`
 }
 
 
