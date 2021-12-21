@@ -7,6 +7,26 @@ import {
 import FloatingElement from '../components/layout/FloatingElement';
 import WalletBalancesTable from '../components/UserInfoTable/WalletBalancesTable';
 import { useMintToTickers } from '../utils/tokens';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import {
+  styled,
+  alpha,
+  createTheme,
+  ThemeProvider,
+} from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import { TokenAccount, FullMarketInfo } from '../utils/types';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 const { TabPane } = Tabs;
 
@@ -31,12 +51,24 @@ export default function BalancesPage() {
   });
 
   return (
-    <FloatingElement style={{ flex: 1, paddingTop: 10 }}>
+    <React.Fragment>
+      <ThemeProvider theme={darkTheme}>
+        <Card>
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+            >
+
       <Tabs defaultActiveKey="walletBalances">
         <TabPane tab="Wallet Balances" key="walletBalances">
           <WalletBalancesTable walletBalances={data} />
         </TabPane>
       </Tabs>
-    </FloatingElement>
+      </Typography>
+      </CardContent>
+      </Card>
+      </ThemeProvider>
+      </React.Fragment>
   );
 }

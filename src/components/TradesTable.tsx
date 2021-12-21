@@ -63,12 +63,11 @@ export default function PublicTrades({ smallScreen }) {
     <ThemeProvider theme={darkTheme}>  
     <Card style={
       smallScreen
-      ? { flex: 1, margin: "10px" }
+      ? { flex: 1, margin: '10px'}
       : {
-          marginTop: '10px',
           minHeight: '170px',
           maxHeight: 'calc(100vh - 700px)',
-          margin: "10px"
+          margin: '10px'
         }}>
     
       <CardContent >    
@@ -88,8 +87,6 @@ export default function PublicTrades({ smallScreen }) {
       {!!trades && loaded && (
         <div
           style={{
-            marginRight: '-20px',
-            paddingRight: '5px',
             overflowY: 'scroll',
             maxHeight: smallScreen
               ? 'calc(100% - 75px)'

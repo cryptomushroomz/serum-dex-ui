@@ -1,4 +1,4 @@
-import { Col, Row, Divider, Span, Avatar } from 'antd';
+import { Col, Row, Divider, Span, Avatar, Tooltip } from 'antd';
 import React, {
   useRef,
   useEffect,
@@ -13,6 +13,7 @@ import {
   useSelectedTokenAccounts,
   MarketProvider,
   getTradePageUrl,
+  getTokenSymbolImageUrl,
 } from '../utils/markets';
 import {
   isEqual,
@@ -26,6 +27,7 @@ import {
   ArrowUpOutlined,
   ArrowDownOutlined,
   CaretDownFilled,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import StandaloneBalancesDisplay from './StandaloneBalancesDisplay';
 import { MarketSelector } from '../pages/TradePage';
@@ -46,6 +48,10 @@ import {
 } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { TokenAccount, FullMarketInfo } from '../utils/types';
+import { numberWithCommas, calcCurrencyPrice } from '../utils/shroomz-utils';
+import { useTranslation } from 'react-i18next';
+import CoingeckoApi from '../utils/client/coingeckoConnector';
+import HistoryApi from '../utils/client/chartDataConnector';
 
 const darkTheme = createTheme({
   palette: {
@@ -68,23 +74,52 @@ export default function CoinHeader() {
     market?.tickSize &&
     markPrice.toFixed(getDecimalCount(market.tickSize));
 
-  let avatar = 1;
   let coinname;
   const marketAddress = market?.address.toBase58();
   const addy = marketAddress;
+  const mintAddress = market?.baseMintAddress.toBase58();
 
   if (addy == 'E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA') {
-    avatar = shroomz;
+    //avatar = shroomz;
     coinname = 'CryptoMushroomz';
   } else if (addy == 'FAHa34qbNbvtEBHgjuALk4WLJMwxJTtV6Z3V3p79XLWG') {
-    avatar = kitty;
+    //avatar = kitty;
     coinname = 'Kitty Coin';
   }
 
-  //let Avatar =
-  //getTradePageUrl(address) == 'E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA'
-  //? shroomz
-  //: 0;
+  const [coingeckoPrice, setCoingeckoPrice] = useState(undefined);
+  const [marketDayVolume, setMarketDayVolume] = useState({
+    market: `${baseCurrency}/${quoteCurrency}`,
+    price: 0,
+    size: 0,
+    summary: 0,
+  });
+  const { t: trText, i18n } = useTranslation();
+
+  let avatar = `https://github.com/solana-labs/token-list/blob/main/assets/mainnet/${mintAddress}/logo.png?raw=true`;
+  let tickSize = market?.tickSize && getDecimalCount(market.tickSize);
+
+  async function getDayVolume() {
+    const response = await HistoryApi.getMarketDayVolume(marketAddress);
+    if (response) {
+      setMarketDayVolume(response);
+    }
+  }
+
+  //let volumebuf = 0;
+  //if  (marketDayVolume>= 0){
+  //  volumebuf = marketDayVolume.summary.totalVolume
+  //}
+
+  useInterval(() => {
+    getDayVolume();
+  }, 10000);
+
+  // 최초 1회 실행
+  useEffect(() => {
+    getDayVolume();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <React.Fragment>
@@ -95,44 +130,117 @@ export default function CoinHeader() {
               sx={{ fontSize: 14 }}
               color="text.secondary"
             ></Typography>
+            <div className="card-body">
+              <div className="row">
+                <div
+                  className="col-xl-12 col-lg-12 col-md-12 col-xxl-12"
+                  style={{ borderBottom: `2px solid `, marginBottom: '10px' }}
+                >
+                  <span
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: '20px',
+                      color: '#2b2b2b',
+                      fontFamily: 'Noto Sans KR,sans-serif',
+                    }}
+                  >
+                    <Avatar
+                      style={{ marginRight: '5px', marginBottom: '5px' }}
+                      src={avatar}
+                    />
+                    {coinname}
+                  </span>{' '}
+                  {baseCurrency}/${quoteCurrency}
+                </div>
+                <div className="col-xl-4 col-lg-4 col-md-4 col-xxl-4">
+                  <div></div>
+                </div>
+                <div
+                  style={{ textAlign: 'right' }}
+                  className="col-xl-8 col-lg-8 col-md-8 col-xxl-8"
+                >
+                  <div className="row" style={{ marginTop: '5px' }}>
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                      {trText('high_price')}
+                    </div>
+                    <div
+                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                      style={{
+                        color: '#26A69A',
+                        borderBottom: `1px solid`,
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {markPrice}
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                      {trText('volume_24h')}
+                    </div>
+                    <div
+                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                      style={{ borderBottom: `1px solid` }}
+                    >
+                      {marketDayVolume?.summary?.totalVolume}{' '}
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          color: '#999',
+                          letterSpacing: '.05em',
+                        }}
+                      >
+                        {baseCurrency && baseCurrency.replace('*', '')}
+                      </span>
+                    </div>
+                  </div>
 
-            <Row
-              gutter={16}
-              style={{
-                fontWeight: 'bold',
-                fontSize: '16px',
-                displaylistitem: 'flex',
-                alignContent: 'center',
-              }}
-            >
-              <Avatar
-                size={32}
-                style={{ marginRight: '5px', marginBottom: '3px' }}
-                src={avatar}
-              />
-              <Col className="gutter-row">
-                <div style={{ display: 'flex', align: 'center' }}>
-                  {coinname}
+                  <div className="row" style={{ marginTop: '13px' }}>
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                      {trText('low_price')}
+                    </div>
+                    <div
+                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                      style={{
+                        color: '#F6465D',
+                        borderBottom: `1px solid`,
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {markPrice}
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                      {trText('volume_price_24h')}
+                    </div>
+                    <div
+                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                      style={{ borderBottom: `1px solid` }}
+                    >
+                      {markPrice}{' '}
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          color: '#999',
+                          letterSpacing: '.05em',
+                        }}
+                      >
+                        {quoteCurrency}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </Col>
-              <Col className="gutter-row" span={4}>
-                <div style={{ textAlign: 'right' }}> {baseCurrency}</div>
-              </Col>
-              <Col className="gutter-row" span={4}>
-                <div style={{ textAlign: 'right' }}> Last Price:</div>
-              </Col>
-              <Col className="gutter-row" span={4}>
-                <div style={{ color: markPriceColor, textAlign: 'right' }}>
-                  {markPrice > previousMarkPrice && (
-                    <ArrowUpOutlined style={{ marginRight: 5 }} />
-                  )}
-                  {markPrice < previousMarkPrice && (
-                    <ArrowDownOutlined style={{ marginRight: 5 }} />
-                  )}
-                  {formattedMarkPrice || '----'} {quoteCurrency}
-                </div>
-              </Col>
-            </Row>
+              </div>
+
+              <div style={{ fontSize: '11px', color: '#646464' }}>
+                <Tooltip title="Current Coingecko global pricing information.">
+                  <span style={{ fontSize: '11px', color: '#646464' }}>
+                    Global Price: {`${markPrice} USD`}
+                  </span>{' '}
+                  <QuestionCircleOutlined
+                    style={{ fontSize: '12px', color: '#646464' }}
+                  />
+                </Tooltip>
+              </div>
+            </div>
+            )
           </CardContent>
         </Card>
       </ThemeProvider>

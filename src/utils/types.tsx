@@ -25,6 +25,14 @@ export interface WalletContextValues {
   select: () => void;
 }
 
+export interface VolumeResponse  {
+  market: string
+  size: number
+  price: number
+  summary: any
+
+}
+
 export interface DexLabMarketInfo {
   address: PublicKey
   nameEn: string

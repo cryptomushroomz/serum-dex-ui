@@ -287,41 +287,7 @@ export default function PrimarySearchAppBar() {
       <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="primary">
         <Toolbar>
-          <Button
-        id="demo-positioned-button"
-        aria-controls="demo-positioned-menu"
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
-      >
-        <IconButton
-              size="large"
-              aria-label="basicmenu"    
-        >
-          <MenuIcon />
-        </IconButton>
-      
-      </Button>
-      <Menu
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        anchorEl={anchorE2}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <MenuItem onClick={handleClose}>Trade</MenuItem>
-        <MenuItem onClick={handleClose}>SWAP</MenuItem>
-        <MenuItem onClick={handleClose}>Stake</MenuItem>
-
-        </Menu>
+         
           <Typography
             variant="h6"
             noWrap
@@ -330,20 +296,37 @@ export default function PrimarySearchAppBar() {
           >
             <img src={logo} alt="" style={{height: "50px "}} />
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Market"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+         
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-
+         
             <MenuList>
-            <Row>
+          <Row>
+            <MenuItem>
+              <Button variant="text" onClick={() => history.push('/market')}>
+                TRADE
+
+            </Button>
+            
+
+              </MenuItem>
+              <MenuItem>
+              <Button variant="text" onClick={() => history.push('/market')}>
+                SWAP
+
+            </Button>
+            
+
+              </MenuItem>
+              <MenuItem>
+              <Button variant="text" onClick={() => history.push('/market')}>
+                STAKE
+
+            </Button>
+            
+
+              </MenuItem>
+            
             {connected && (!searchFocussed || location.pathname === '/balances') && (
               <MenuItem>
               <Button variant="text" onClick={() => history.push('/balances')}>

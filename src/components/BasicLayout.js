@@ -1,6 +1,5 @@
 import { Layout } from 'antd';
 import React, { useEffect } from 'react';
-import TopBar from './TopBar';
 import TopBarnew from './TopBarnew';
 import { CustomFooter as Footer } from './Footer';
 import { useReferrer } from '../utils/referrer';
