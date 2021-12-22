@@ -158,26 +158,7 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
+      
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -188,7 +169,7 @@ export default function PrimarySearchAppBar() {
         >
           <Button variant="contained">Connect</Button>
         </IconButton>
-        <p>Profile</p>
+        
       </MenuItem>
     </Menu>
   );
@@ -274,7 +255,7 @@ export default function PrimarySearchAppBar() {
     return () => window.removeEventListener('beforeunload', handler);
   }, [endpointInfoCustom, setEndpoint]);
 
-  const tradePageUrl = location.pathname.startsWith('/market/')
+  const tradePageUrl = location.pathname.startsWith('/market/E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA/')
     ? location.pathname
     : getTradePageUrl();
 
@@ -303,7 +284,7 @@ export default function PrimarySearchAppBar() {
             <MenuList>
           <Row>
             <MenuItem>
-              <Button variant="text" onClick={() => history.push('/market')}>
+              <Button variant="text" onClick={() => history.push('/market/E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA')}>
                 TRADE
 
             </Button>
@@ -311,21 +292,14 @@ export default function PrimarySearchAppBar() {
 
               </MenuItem>
               <MenuItem>
-              <Button variant="text" onClick={() => history.push('/market')}>
+              <Button variant="text" onClick={() => history.push('/market/E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA')}>
                 SWAP
 
             </Button>
             
 
               </MenuItem>
-              <MenuItem>
-              <Button variant="text" onClick={() => history.push('/market')}>
-                STAKE
-
-            </Button>
-            
-
-              </MenuItem>
+              
             
             {connected && (!searchFocussed || location.pathname === '/balances') && (
               <MenuItem>

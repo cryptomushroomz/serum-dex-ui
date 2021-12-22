@@ -26,11 +26,9 @@ export interface WalletContextValues {
 }
 
 export interface VolumeResponse  {
-  market: string
-  size: number
-  price: number
-  summary: any
-
+  volumeUsd: number
+  volume: number
+  
 }
 
 export interface DexLabMarketInfo {
@@ -166,4 +164,50 @@ export interface BonfidaTrade {
   side: string;
   feeCost: number;
   marketAddress: string;
+}
+
+export interface DexLabClosingPrice {
+  market: string
+  price: string
+  time: string
+  marketMddress: string
+}
+
+export type DexLabMarketV2Info = {
+  address: string
+  programId: string
+  subSymbolPrefix?: string
+  base: string
+  baseMint: string
+  quote: string
+  quoteMint: string
+  symbol: string
+  mainCategory: string
+  subCategory: string
+  nameEn: string
+  nameCn?: string
+  nameKr?: string
+  descriptionEn?: string
+  descriptionCn?: string
+  descriptionKr?: string
+  iconUrl: string
+  nftImageUrl?: string
+  community?: string
+  owner?: string
+  chartType: string
+  orderType: string
+  summary: string
+  hourSummary?: string
+  tvWidgetChartSymbol?: string
+  isChart: boolean
+  isNew: boolean
+  isDexlabChart: boolean
+  source: string
+  enable: boolean
+}
+export interface DexLabHourPrice {
+  market: string
+  price: string
+  time: string
+  marketAddress: string
 }

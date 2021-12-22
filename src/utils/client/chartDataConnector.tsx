@@ -12,20 +12,24 @@ import {Market, MARKETS, OpenOrders, Orderbook, TOKEN_MINTS, TokenInstructions,}
 
 
 
-export const DEXLAB_API_HOST = 'https://api.dexlab.space'
-export const DEXLAB_CHART_API_HOST = 'https://tv-api.dexlab.space'
+export const BONFIDA_API_HOST = 'https://serum-api.bonfida.com'
+
 
 function getHostUrl() {
   // endpoint 랜덤 배정
-  const getEndpointRand = `${DEXLAB_API_HOST}/v1/trade-history`
+  const getEndpointRand = Math.random()
+  if (getEndpointRand < 0.5) {
+    return `${BONFIDA_API_HOST}`
+  } else {
+    return `${BONFIDA_API_HOST}`
+  }
 }
 
 
-
-
-// const baseUrl = `${DEXLAB_CHART_API_HOST}/v1/trade-history`
-export default class ChartApi {
+export default class HistoryApi {
   static URL = `${getHostUrl()}/`
+
+
 
   static async get(path: string) {
     let isError = false
@@ -42,8 +46,10 @@ export default class ChartApi {
 
     if (isError) {
       try {
-        let retryApiHost = `${DEXLAB_API_HOST}/v1/volumes/`
-        
+        let retryApiHost = `${BONFIDA_API_HOST}/`
+        if (retryApiHost === `${BONFIDA_API_HOST}/`) {
+          retryApiHost = `${BONFIDA_API_HOST}/`
+        }
         const response = await fetch(retryApiHost + path)
         if (response.ok) {
           const responseJson = await response.json()
@@ -53,15 +59,13 @@ export default class ChartApi {
         console.log(`Error retry fetching from Chart API ${path}: ${err}`)
       }
     }
-    let addresss = "E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA"
 
     return null
   }
 
-
   // 24시간 거래볼륨 조회
-  static async getMarketDayVolume(addresss): Promise<VolumeResponse | null> {
-    return ChartApi.get(`${addresss}`)
+  static async getMarketDayVolume(market): Promise<VolumeResponse[] | null> {
+    return HistoryApi.get(`volumes/${market}`)
   }
 
   // 마켓 히스토리 조회
@@ -83,4 +87,4 @@ export default class ChartApi {
   }*/
 }
 
-export const CHART_DATA_FEED = `${getHostUrl()}/tv`;
+

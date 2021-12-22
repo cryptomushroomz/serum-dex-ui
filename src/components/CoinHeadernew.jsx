@@ -52,6 +52,7 @@ import { numberWithCommas, calcCurrencyPrice } from '../utils/shroomz-utils';
 import { useTranslation } from 'react-i18next';
 import CoingeckoApi from '../utils/client/coingeckoConnector';
 import HistoryApi from '../utils/client/chartDataConnector';
+import SelectCoinHeader from './SelectCoinHeader_shroomz';
 
 const darkTheme = createTheme({
   palette: {
@@ -88,35 +89,25 @@ export default function CoinHeader() {
   }
 
   const [coingeckoPrice, setCoingeckoPrice] = useState(undefined);
-  const [marketDayVolume, setMarketDayVolume] = useState({
-    market: `${baseCurrency}/${quoteCurrency}`,
-    price: 0,
-    size: 0,
-    summary: 0,
-  });
+  const [marketDayVolume, setMarketDayVolume] = useState(undefined);
+
   const { t: trText, i18n } = useTranslation();
 
   let lowPrice = 0;
   let highPrice = 0;
   let volume = 0;
-  lowPrice = marketDayVolume?.summary?.lowPrice;
-  highPrice = marketDayVolume?.summary?.highPrice;
-  volume = marketDayVolume?.summary?.totalVolume;
 
   let avatar = `https://github.com/solana-labs/token-list/blob/main/assets/mainnet/${mintAddress}/logo.png?raw=true`;
   let tickSize = market?.tickSize && getDecimalCount(market.tickSize);
 
   async function getDayVolume() {
-    const response = await HistoryApi.getMarketDayVolume(marketAddress);
+    const response = await HistoryApi.getMarketDayVolume(
+      `${baseCurrency}${quoteCurrency}`,
+    );
     if (response) {
-      setMarketDayVolume(response);
+      setMarketDayVolume(response.volume);
     }
   }
-
-  //let volumebuf = 0;
-  //if  (marketDayVolume>= 0){
-  //  volumebuf = marketDayVolume.summary.totalVolume
-  //}
 
   useInterval(() => {
     getDayVolume();
@@ -133,121 +124,115 @@ export default function CoinHeader() {
       <ThemeProvider theme={darkTheme}>
         <Card style={{ margin: '10px' }}>
           <CardContent>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-            ></Typography>
-            <div className="card-body">
-              <div className="row">
-                <div
-                  className="col-xl-12 col-lg-12 col-md-12 col-xxl-12"
-                  style={{ borderBottom: `2px solid `, marginBottom: '10px' }}
-                >
-                  <span
-                    style={{
-                      fontWeight: 'bold',
-                      fontSize: '20px',
-                      color: '#2b2b2b',
-                      fontFamily: 'Noto Sans KR,sans-serif',
-                    }}
+            <Typography sx={{ fontSize: 14 }} color="text.secondary">
+              <div className="card-body">
+                <div className="row">
+                  <div
+                    className="col-xl-12 col-lg-12 col-md-12 col-xxl-12"
+                    style={{ borderBottom: `2px solid `, marginBottom: '10px' }}
                   >
-                    <Avatar
-                      style={{ marginRight: '5px', marginBottom: '5px' }}
-                      src={avatar}
-                    />
-                    {coinname}
-                  </span>{' '}
-                  {baseCurrency}/${quoteCurrency}
-                </div>
-                <div className="col-xl-4 col-lg-4 col-md-4 col-xxl-4">
-                  <div></div>
-                </div>
-                <div
-                  style={{ textAlign: 'right' }}
-                  className="col-xl-8 col-lg-8 col-md-8 col-xxl-8"
-                >
-                  <div className="row" style={{ marginTop: '5px' }}>
-                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                      {trText('high_price')}
-                    </div>
-                    <div
-                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                    <span
                       style={{
-                        color: '#26A69A',
-                        borderBottom: `1px solid`,
                         fontWeight: 'bold',
+                        fontSize: '20px',
+                        color: '#2b2b2b',
                       }}
                     >
-                      {highPrice && highPrice}
-                    </div>
-                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                      {trText('volume_24h')}
-                    </div>
-                    <div
-                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                      style={{ borderBottom: `1px solid` }}
-                    >
-                      {volume && volume}{' '}
-                      <span
-                        style={{
-                          fontSize: '11px',
-                          color: '#999',
-                          letterSpacing: '.05em',
-                        }}
-                      >
-                        {baseCurrency && baseCurrency.replace('*', '')}
-                      </span>
+                      <Avatar
+                        style={{ marginRight: '5px', marginBottom: '5px' }}
+                        src={avatar}
+                      />
+                      {coinname}
+                    </span>
+                    {'    '}
+                    {baseCurrency}/{quoteCurrency}
+                  </div>
+                  <div className="col-xl-4 col-lg-4 col-md-4 col-xxl-4">
+                    <div>
+                      {market?.address.toBase58() && baseCurrency ? (
+                        <SelectCoinHeader
+                          markPrice={markPrice ?? 0}
+                          selectedMarket={market?.address.toBase58()}
+                          currency={baseCurrency}
+                        />
+                      ) : null}
                     </div>
                   </div>
-
-                  <div className="row" style={{ marginTop: '13px' }}>
-                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                      {trText('low_price')}
-                    </div>
-                    <div
-                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                      style={{
-                        color: '#F6465D',
-                        borderBottom: `1px solid`,
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {lowPrice && lowPrice}
-                    </div>
-                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                      {trText('volume_price_24h')}
-                    </div>
-                    <div
-                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                      style={{ borderBottom: `1px solid` }}
-                    >
-                      {volume && volume}{' '}
-                      <span
+                  <div
+                    style={{ textAlign: 'right' }}
+                    className="col-xl-8 col-lg-8 col-md-8 col-xxl-8"
+                  >
+                    <div className="row" style={{ marginTop: '5px' }}>
+                      <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                        {trText('high_price')}
+                      </div>
+                      <div
+                        className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
                         style={{
-                          fontSize: '11px',
-                          color: '#999',
-                          letterSpacing: '.05em',
+                          borderBottom: `1px solid`,
+                          fontWeight: 'bold',
                         }}
                       >
                         {quoteCurrency}
-                      </span>
+                      </div>
+                      <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                        {trText('Volume 24h')}
+                      </div>
+                      <div
+                        className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                        style={{ borderBottom: `1px solid` }}
+                      >
+                        {marketDayVolume?.volume}{' '}
+                        <span
+                          style={{
+                            fontSize: '11px',
+                            color: '#999',
+                            letterSpacing: '.05em',
+                          }}
+                        >
+                          {baseCurrency && baseCurrency.replace('*', '')}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="row">
+                      <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                        {trText('Low price')}
+                      </div>
+                      <div
+                        className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                        style={{
+                          borderBottom: `1px solid`,
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {quoteCurrency}
+                      </div>
+                      <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                        {trText('Volume price 24h')}
+                      </div>
+                      <div
+                        className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                        style={{ borderBottom: `1px solid` }}
+                      >
+                        {volume && volume}{' '}
+                        <span
+                          style={{
+                            fontSize: '11px',
+                            color: '#999',
+                            letterSpacing: '.05em',
+                          }}
+                        >
+                          {quoteCurrency}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div style={{ fontSize: '11px', color: '#646464' }}>
-                <Tooltip title="Current Coingecko global pricing information.">
-                  <span style={{ fontSize: '11px', color: '#646464' }}>
-                    Global Price: {`${markPrice} USD`}
-                  </span>{' '}
-                  <QuestionCircleOutlined
-                    style={{ fontSize: '12px', color: '#646464' }}
-                  />
-                </Tooltip>
+                <div style={{ fontSize: '11px', color: '#646464' }}></div>
               </div>
-            </div>
-            )
+            </Typography>
           </CardContent>
         </Card>
       </ThemeProvider>

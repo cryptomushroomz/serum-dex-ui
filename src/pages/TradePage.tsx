@@ -13,14 +13,12 @@ import {
   useMarketsList,
   useMarkPrice,
   useSelectedBaseCurrencyAccount,
-  useUnmigratedDeprecatedMarkets,
   getMarketOrderPrice,
   USE_MARKETS,
 } from '../utils/markets';
 import TradeForm from '../components/TradeForm';
 import TradesTable from '../components/TradesTable';
 import LinkAddress from '../components/LinkAddress';
-import DeprecatedMarketsInstructions from '../components/DeprecatedMarketsInstructions';
 import {
   DeleteOutlined,
   InfoCircleOutlined,
@@ -58,8 +56,13 @@ const Wrapper = styled.div`
   }
 `;
 
+
 export default function TradePage() {
-  const { marketAddress } = useParams();
+  let { marketAddress } = useParams();
+  if (marketAddress === "shroomzdex"){
+    marketAddress = "E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA"
+  }
+
   useEffect(() => {
     if (marketAddress) {
       localStorage.setItem('marketAddress', JSON.stringify(marketAddress));
@@ -92,7 +95,6 @@ export function TradePageInner() {
   const markets = useMarketsList();
   const [handleDeprecated, setHandleDeprecated] = useState(false);
   const [addMarketVisible, setAddMarketVisible] = useState(false);
-  const deprecatedMarkets = useUnmigratedDeprecatedMarkets();
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
     width: window.innerWidth,
@@ -132,11 +134,7 @@ export function TradePageInner() {
   };
   const component = (() => {
     if (handleDeprecated) {
-      return (
-        <DeprecatedMarketsPage
-          switchToLiveMarkets={() => setHandleDeprecated(false)}
-        />
-      );
+      return null;
     } else if (width < 1000) {
       return <RenderSmaller {...componentProps} />;
     } else if (width < 1450) {
@@ -208,21 +206,6 @@ export function TradePageInner() {
               onClick={() => setAddMarketVisible(true)}
             />
           </Col>
-          {deprecatedMarkets && deprecatedMarkets.length > 0 && (
-            <React.Fragment>
-              <Col>
-                <Typography>
-                  You have unsettled funds on old markets! Please go through
-                  them to claim your funds.
-                </Typography>
-              </Col>
-              <Col>
-                <Button onClick={() => setHandleDeprecated(!handleDeprecated)}>
-                  {handleDeprecated ? 'View new markets' : 'Handle old markets'}
-                </Button>
-              </Col>
-            </React.Fragment>
-          )}
         </Row>
         {component}
       </Wrapper>
@@ -334,21 +317,6 @@ export function MarketSelector({
     </Select>
   );
 }
-
-const DeprecatedMarketsPage = ({ switchToLiveMarkets }) => {
-  return (
-    <>
-      <Row>
-        <Col flex="auto">
-          <DeprecatedMarketsInstructions
-            switchToLiveMarkets={switchToLiveMarkets}
-          />
-        </Col>
-      </Row>
-    </>
-  );
-};
-
 
 const RenderNormal = ({ onChangeOrderRef, onPrice, onSize }) => {
   return (
