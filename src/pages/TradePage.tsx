@@ -41,7 +41,6 @@ import MarketSelect from '../components/Marketselect';
 
 
 
-
 const { Option, OptGroup } = Select;
 
 
@@ -320,114 +319,139 @@ export function MarketSelector({
 
 const RenderNormal = ({ onChangeOrderRef, onPrice, onSize }) => {
   return (
-    <Row
+    <><Row
       style={{
-        minHeight: '500px',
-        flexWrap: 'nowrap',
+        flexWrap: 'wrap',
+        display: 'flex',
       }}
     >
-      <Col flex="auto" style={{ height: '100%' }}>
-        
-        <CoinHeader/>
-        <Col style={{height: "60vh" }}>
-        <TVChartContainer />
-        </Col>
-        <Row style={{ height: '100%' }}>
-          <UserInfoTable />
-        </Row>
+      <Col style={{ height: '100%', flex: '6', display:'flex', flexFlow: 'column' }}>
+         <div style={{ display: 'flexgrow'}}>
+        <CoinHeader />
+        </div>
+        <div style={{ display: 'flex', minHeight: '60vh'}}>
+          <TVChartContainer />
+        </div>
+        <div>
+        <UserInfoTable />
+        </div>
       </Col>
-      <Col flex={'360px'} style={{ height: '100%' }}>
-        <Orderbook smallScreen={false} onPrice={onPrice} onSize={onSize} />
-        <TradesTable smallScreen={false} />
+      <Col style={{ flex: '2', display:'flex', flexFlow: 'column'}}>
+        <div style={{display:'flex', flex: '1'}} >
+          <Orderbook smallScreen={true}
+            depth={9}
+            onPrice={onPrice}
+            onSize={onSize} />
+        </div>
+        <div style={{display:'flex', flex: '1'}} >
+          <TradesTable />
+        </div>
       </Col>
       <Col
-        flex="400px"
-        style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-      >
+        style={{flex: "3", display:'flex', flexFlow: 'column' }}
+      > <div style={{display:'flex', flex: '1'}} >
         <TradeForm setChangeOrderRef={onChangeOrderRef} />
+        </div>
+        <div style={{display:'flex', flex: '1'}} >
         <StandaloneBalancesDisplay />
+        </div>
       </Col>
     </Row>
+    </>
   );
 };
 
 const RenderSmall = ({ onChangeOrderRef, onPrice, onSize }) => {
   return (
-    <>
-      <Row>
-      <Col flex = 'auto'>
-        <CoinHeader/>
-      <div style={{ height: '60vh', margin: '20px'}}>
-      <TVChartContainer />
-      </div>
+<><Row
+      style={{
+        flexWrap: 'wrap',
+        display: 'flex',
+      }}
+    >
+      <Col style={{ height: '100%', flex: '6', display:'flex', flexFlow: 'column' }}>
+         <div style={{ display: 'flexgrow'}}>
+        <CoinHeader />
+        </div>
+        <div style={{ display: 'flex', minHeight: '60vh'}}>
+          <TVChartContainer />
+        </div>
+      
       </Col>
-
-      </Row>
-      <Row
-        style={{
-          height: '900px',
-        }}
-      >
-        <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
-          <Orderbook
-            smallScreen={true}
-            depth={13}
+      <Col style={{ flex: '2', display:'flex', flexFlow: 'column'}}>
+        <div style={{display:'flex', flex: '1'}} >
+          <Orderbook smallScreen={true}
+            depth={9}
             onPrice={onPrice}
-            onSize={onSize}
-          />
-        </Col>
-        <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
-          <TradesTable smallScreen={true} />
-        </Col>
-        <Col
-          flex="400px"
-          style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-        >
-          <TradeForm setChangeOrderRef={onChangeOrderRef} />
-          <StandaloneBalancesDisplay />
-        </Col>
-      </Row>
-      <Row>
-        <Col flex="auto">
-          <UserInfoTable />
-        </Col>
-      </Row>
+            onSize={onSize} />
+        </div>
+        <div style={{display:'flex', flex: '1'}} >
+          <TradesTable />
+        </div>
+      </Col>
+      <Col
+        style={{flex: "3", display:'flex', flexFlow: 'column' }}
+      > <div style={{display:'flex', flex: '1'}} >
+        <TradeForm setChangeOrderRef={onChangeOrderRef} />
+        </div>
+        <div style={{display:'flex', flex: '1'}} >
+        <StandaloneBalancesDisplay />
+        </div>
+      </Col>
+    </Row>
+    <Row>
+
+    <div style={{flex: 'auto'}}>
+        <UserInfoTable />
+        </div>
+    </Row>
     </>
   );
 };
 
 const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
   return (
-    <>
-      <Row style={{ height: '100vh' }}>
-      <CoinHeader/>
-         <TVChartContainer />
-      </Row>
-      <Row>
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <TradeForm style={{ flex: 1 }} setChangeOrderRef={onChangeOrderRef} />
-        </Col>
-        <Col xs={24} sm={12}>
-          <StandaloneBalancesDisplay />
-        </Col>
-      </Row>
-      <Row
-        style={{
-          height: '500px',
-        }}
-      >
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <Orderbook smallScreen={true} onPrice={onPrice} onSize={onSize} />
-        </Col>
-        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-          <TradesTable smallScreen={true} />
-        </Col>
-      </Row>
-      <Row>
-        <Col flex="auto">
-          <UserInfoTable />
-        </Col>
-      </Row>
+    <><Row
+      style={{
+        flexWrap: 'wrap',
+        display: 'flex',
+      }}
+    >
+      <Col style={{ height: '100%', flex: '6', display:'flex', flexFlow: 'column' }}>
+         <div style={{ display: 'flexgrow'}}>
+        <CoinHeader />
+        </div>
+        <div style={{ display: 'flex', minHeight: '60vh'}}>
+          <TVChartContainer />
+        </div>
+      
+      </Col>
+      <Col style={{ flex: '2', display:'flex', flexFlow: 'column'}}>
+        <div style={{display:'flex', flex: '1'}} >
+          <Orderbook smallScreen={true}
+            depth={9}
+            onPrice={onPrice}
+            onSize={onSize} />
+        </div>
+        <div style={{display:'flex', flex: '1'}} >
+          <TradesTable />
+        </div>
+      </Col>
+      <Col
+        style={{flex: "3", display:'flex', flexFlow: 'column' }}
+      > <div style={{display:'flex', flex: '1'}} >
+        <TradeForm setChangeOrderRef={onChangeOrderRef} />
+        </div>
+        <div style={{display:'flex', flex: '1'}} >
+        <StandaloneBalancesDisplay />
+        </div>
+      </Col>
+    </Row>
+    <Row>
+    <div style={{flex: 'auto'}}>
+        <UserInfoTable />
+        </div>
+    </Row>
     </>
   );
 };

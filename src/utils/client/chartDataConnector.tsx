@@ -1,4 +1,4 @@
-import { VolumeResponse } from '../types'
+import { VolumeResponse, HistResponse } from '../types'
 import {
   useMarket,
   useOrderbook,
@@ -67,6 +67,12 @@ export default class HistoryApi {
   static async getMarketDayVolume(market): Promise<VolumeResponse[] | null> {
     return HistoryApi.get(`volumes/${market}`)
   }
+
+  static async getMarketHistData(market): Promise<HistResponse[] | null> {
+    return HistoryApi.get(`candles/${market}?resolution=3600`)
+  }
+
+
 
   // 마켓 히스토리 조회
   /*static async getMarketTradeHistory(marketAddress: string): Promise<TradeHistory[] | null> {

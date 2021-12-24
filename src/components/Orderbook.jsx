@@ -150,7 +150,7 @@ export default function Orderbook({ smallScreen, depth = 7, onPrice, onSize }) {
           style={
             smallScreen
               ? { flex: 1, margin: '10px' }
-              : { height: '500px', overflow: 'hidden', margin: '10px' }
+              : { flex: 1, margin: '10px' }
           }
         >
           <CardContent>

@@ -3,13 +3,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { useMarket, useBonfidaTrades } from '../utils/markets';
 import { getDecimalCount } from '../utils/utils';
-import FloatingElement from './layout/FloatingElement';
 import { BonfidaTrade } from '../utils/types';
 import { alpha, createTheme, ThemeProvider } from '@mui/material/styles';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 
 const darkTheme = createTheme({
@@ -52,22 +49,22 @@ const SizeTitle = styled(Row)`
   color: #434a59;
 `;
 
-export default function PublicTrades({ smallScreen }) {
+export default function PublicTrades() {
   const { baseCurrency, quoteCurrency, market } = useMarket();
   const [trades, loaded] = useBonfidaTrades();
 
   return (
     
 
-    <React.Fragment>
+   
     <ThemeProvider theme={darkTheme}>  
     <Card style={
-      smallScreen
-      ? { flex: 1, margin: '10px'}
-      : {
+      
+     {
           minHeight: '170px',
-          maxHeight: 'calc(100vh - 700px)',
-          margin: '10px'
+          maxHeight: '450px',
+          margin: '10px',
+          flex: '1'  
         }}>
     
       <CardContent >    
@@ -88,9 +85,7 @@ export default function PublicTrades({ smallScreen }) {
         <div
           style={{
             overflowY: 'scroll',
-            maxHeight: smallScreen
-              ? 'calc(100% - 75px)'
-              : 'calc(100vh - 800px)',
+            
           }}
         >
           {trades.map((trade: BonfidaTrade, i: number) => (
@@ -125,6 +120,6 @@ export default function PublicTrades({ smallScreen }) {
     </CardContent>
     </Card>
     </ThemeProvider>
-    </React.Fragment>
+
   );
 }

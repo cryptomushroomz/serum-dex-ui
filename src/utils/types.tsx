@@ -31,6 +31,17 @@ export interface VolumeResponse  {
   
 }
 
+export interface HistResponse {
+  close: number
+  open: number
+  low: number
+  high: number
+  startTime: string
+  market: string
+  volumeBase: number
+  volumeQuote: number
+}
+
 export interface DexLabMarketInfo {
   address: PublicKey
   nameEn: string

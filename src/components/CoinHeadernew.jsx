@@ -90,6 +90,7 @@ export default function CoinHeader() {
 
   const [coingeckoPrice, setCoingeckoPrice] = useState(undefined);
   const [marketDayVolume, setMarketDayVolume] = useState(undefined);
+  const [marketHistData, setMarketHistData] = useState(undefined);
 
   const { t: trText, i18n } = useTranslation();
 
@@ -104,138 +105,158 @@ export default function CoinHeader() {
     const response = await HistoryApi.getMarketDayVolume(
       `${baseCurrency}${quoteCurrency}`,
     );
-    if (response) {
-      setMarketDayVolume(response.volume);
+
+    console.log('response', response);
+
+    if (response && response.length > 0) {
+      setMarketDayVolume(response[0]);
+    }
+  }
+
+  async function gethistdata() {
+    const response = await HistoryApi.getMarketHistData(
+      `${baseCurrency}${quoteCurrency}`,
+    );
+
+    console.log('response', response);
+
+    if (response && response.length > 0) {
+      setMarketHistData(response[0]);
     }
   }
 
   useInterval(() => {
     getDayVolume();
+    gethistdata();
   }, 10000);
 
   // 최초 1회 실행
   useEffect(() => {
     getDayVolume();
+    gethistdata();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <React.Fragment>
-      <ThemeProvider theme={darkTheme}>
-        <Card style={{ margin: '10px' }}>
-          <CardContent>
-            <Typography sx={{ fontSize: 14 }} color="text.secondary">
-              <div className="card-body">
-                <div className="row">
-                  <div
-                    className="col-xl-12 col-lg-12 col-md-12 col-xxl-12"
-                    style={{ borderBottom: `2px solid `, marginBottom: '10px' }}
+    <ThemeProvider theme={darkTheme}>
+      <Card flex="auto" style={{ margin: '10px', minheight: '20vh' }}>
+        <CardContent>
+          <Typography sx={{ fontSize: 14 }} color="text.secondary">
+            <div className="card-body">
+              <div className="row">
+                <div
+                  className="col-xl-12 col-lg-12 col-md-12 col-xxl-12"
+                  style={{ borderBottom: `2px solid `, marginBottom: '10px' }}
+                >
+                  <span
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: '20px',
+                      color: '#2b2b2b',
+                    }}
                   >
-                    <span
-                      style={{
-                        fontWeight: 'bold',
-                        fontSize: '20px',
-                        color: '#2b2b2b',
-                      }}
-                    >
-                      <Avatar
-                        style={{ marginRight: '5px', marginBottom: '5px' }}
-                        src={avatar}
+                    <Avatar
+                      style={{ marginRight: '5px', marginBottom: '5px' }}
+                      src={avatar}
+                    />
+                    {coinname}
+                  </span>
+                  {'    '}
+                  {baseCurrency}/{quoteCurrency}
+                </div>
+                <div className="col-xl-4 col-lg-4 col-md-4 col-xxl-4">
+                  <div>
+                    {market?.address.toBase58() && baseCurrency ? (
+                      <SelectCoinHeader
+                        markPrice={markPrice ?? 0}
+                        selectedMarket={market?.address.toBase58()}
+                        currency={baseCurrency}
                       />
-                      {coinname}
-                    </span>
-                    {'    '}
-                    {baseCurrency}/{quoteCurrency}
-                  </div>
-                  <div className="col-xl-4 col-lg-4 col-md-4 col-xxl-4">
-                    <div>
-                      {market?.address.toBase58() && baseCurrency ? (
-                        <SelectCoinHeader
-                          markPrice={markPrice ?? 0}
-                          selectedMarket={market?.address.toBase58()}
-                          currency={baseCurrency}
-                        />
-                      ) : null}
-                    </div>
-                  </div>
-                  <div
-                    style={{ textAlign: 'right' }}
-                    className="col-xl-8 col-lg-8 col-md-8 col-xxl-8"
-                  >
-                    <div className="row" style={{ marginTop: '5px' }}>
-                      <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                        {trText('high_price')}
-                      </div>
-                      <div
-                        className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                        style={{
-                          borderBottom: `1px solid`,
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        {quoteCurrency}
-                      </div>
-                      <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                        {trText('Volume 24h')}
-                      </div>
-                      <div
-                        className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                        style={{ borderBottom: `1px solid` }}
-                      >
-                        {marketDayVolume?.volume}{' '}
-                        <span
-                          style={{
-                            fontSize: '11px',
-                            color: '#999',
-                            letterSpacing: '.05em',
-                          }}
-                        >
-                          {baseCurrency && baseCurrency.replace('*', '')}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="row">
-                      <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                        {trText('Low price')}
-                      </div>
-                      <div
-                        className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                        style={{
-                          borderBottom: `1px solid`,
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        {quoteCurrency}
-                      </div>
-                      <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                        {trText('Volume price 24h')}
-                      </div>
-                      <div
-                        className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                        style={{ borderBottom: `1px solid` }}
-                      >
-                        {volume && volume}{' '}
-                        <span
-                          style={{
-                            fontSize: '11px',
-                            color: '#999',
-                            letterSpacing: '.05em',
-                          }}
-                        >
-                          {quoteCurrency}
-                        </span>
-                      </div>
-                    </div>
+                    ) : null}
                   </div>
                 </div>
 
-                <div style={{ fontSize: '11px', color: '#646464' }}></div>
+                <div
+                  style={{ textAlign: 'right' }}
+                  className="col-xl-8 col-lg-8 col-md-8 col-xxl-8"
+                >
+                  <div className="row" style={{ marginTop: '5px' }}>
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                      {trText('high_price')}
+                    </div>
+                    <div
+                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                      style={{
+                        borderBottom: `1px solid`,
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {quoteCurrency}
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                      {trText('Volume 24h')}
+                    </div>
+                    <div
+                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                      style={{ borderBottom: `1px solid` }}
+                    >
+                      {marketDayVolume?.volume.toFixed(
+                        getDecimalCount(market.tickSize),
+                      )}{' '}
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          color: '#999',
+                          letterSpacing: '.05em',
+                        }}
+                      >
+                        {baseCurrency && baseCurrency.replace('*', '')}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                      {trText('Low price')}
+                    </div>
+                    <div
+                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                      style={{
+                        borderBottom: `1px solid`,
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {quoteCurrency}
+                    </div>
+                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
+                      {trText('Volume price 24h')}
+                    </div>
+                    <div
+                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
+                      style={{ borderBottom: `1px solid` }}
+                    >
+                      {marketDayVolume?.volumeUsd.toFixed(
+                        getDecimalCount(market.tickSize),
+                      )}{' '}
+                      <span
+                        style={{
+                          fontSize: '11px',
+                          color: '#999',
+                          letterSpacing: '.05em',
+                        }}
+                      >
+                        {quoteCurrency}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </Typography>
-          </CardContent>
-        </Card>
-      </ThemeProvider>
-    </React.Fragment>
+
+              <div style={{ fontSize: '11px', color: '#646464' }}></div>
+            </div>
+          </Typography>
+        </CardContent>
+      </Card>
+    </ThemeProvider>
   );
 }
