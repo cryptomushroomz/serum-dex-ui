@@ -73,7 +73,7 @@ export default function CoinHeader() {
   let formattedMarkPrice =
     markPrice &&
     market?.tickSize &&
-    markPrice.toFixed(getDecimalCount(market.tickSize));
+    markPrice.toFixed(getDecimalCount(market?.tickSize));
 
   let coinname;
   const marketAddress = market?.address.toBase58();
@@ -99,7 +99,7 @@ export default function CoinHeader() {
   let volume = 0;
 
   let avatar = `https://github.com/solana-labs/token-list/blob/main/assets/mainnet/${mintAddress}/logo.png?raw=true`;
-  let tickSize = market?.tickSize && getDecimalCount(market.tickSize);
+  let tickSize = market?.tickSize && getDecimalCount(market?.tickSize);
 
   async function getDayVolume() {
     const response = await HistoryApi.getMarketDayVolume(
@@ -201,7 +201,7 @@ export default function CoinHeader() {
                       style={{ borderBottom: `1px solid` }}
                     >
                       {marketDayVolume?.volume.toFixed(
-                        getDecimalCount(market.tickSize),
+                        getDecimalCount(market?.tickSize),
                       )}{' '}
                       <span
                         style={{
@@ -236,7 +236,7 @@ export default function CoinHeader() {
                       style={{ borderBottom: `1px solid` }}
                     >
                       {marketDayVolume?.volumeUsd.toFixed(
-                        getDecimalCount(market.tickSize),
+                        getDecimalCount(market?.tickSize),
                       )}{' '}
                       <span
                         style={{
