@@ -73,7 +73,7 @@ export default function CoinHeader() {
   let formattedMarkPrice =
     markPrice &&
     market?.tickSize &&
-    markPrice.toFixed(getDecimalCount(market?.tickSize));
+    markPrice.toFixed(getDecimalCount(market.tickSize));
 
   let coinname;
   const marketAddress = market?.address.toBase58();

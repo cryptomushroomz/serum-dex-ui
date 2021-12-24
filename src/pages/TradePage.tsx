@@ -58,7 +58,7 @@ const Wrapper = styled.div`
 
 export default function TradePage() {
   let { marketAddress } = useParams();
-  if (marketAddress != "shroomzdex"){
+  if (marketAddress === "shroomzdex"){
     marketAddress = "E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA"
   }
 
@@ -401,7 +401,7 @@ const RenderSmall = ({ onChangeOrderRef, onPrice, onSize }) => {
     </Row>
     <Row>
 
-    <div style={{flex: 'auto'}}>
+    <div>
         <UserInfoTable />
         </div>
     </Row>
@@ -416,7 +416,7 @@ const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
         flexWrap: 'wrap',
         display: 'flex',
       }}
-    >
+    > <Row>
       <Col style={{ height: '100%', flex: '6', display:'flex', flexFlow: 'column' }}>
          <div style={{ display: 'flexgrow'}}>
         <CoinHeader />
@@ -426,6 +426,19 @@ const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
         </div>
       
       </Col>
+      </Row>
+      <Row>
+      <Col
+        style={{flex: "3", display:'flex', flexFlow: 'column' }}
+      > <div style={{display:'flex', flex: '1'}} >
+        <TradeForm setChangeOrderRef={onChangeOrderRef} />
+        </div>
+        <div style={{display:'flex', flex: '1'}} >
+        <StandaloneBalancesDisplay />
+        </div>
+      </Col>
+      </Row>
+       <Row>
       <Col style={{ flex: '2', display:'flex', flexFlow: 'column'}}>
         <div style={{display:'flex', flex: '1'}} >
           <Orderbook smallScreen={true}
@@ -437,15 +450,8 @@ const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
           <TradesTable />
         </div>
       </Col>
-      <Col
-        style={{flex: "3", display:'flex', flexFlow: 'column' }}
-      > <div style={{display:'flex', flex: '1'}} >
-        <TradeForm setChangeOrderRef={onChangeOrderRef} />
-        </div>
-        <div style={{display:'flex', flex: '1'}} >
-        <StandaloneBalancesDisplay />
-        </div>
-      </Col>
+      </Row>
+      
     </Row>
     <Row>
     <div style={{flex: 'auto'}}>

@@ -1,9 +1,9 @@
 import { createGlobalStyle } from 'styled-components';
-import bg from './bg.png';
+
 
 export const GlobalStyle = createGlobalStyle`
 html,body{
-  background: url(${bg});
+  
 }
 input[type=number]::-webkit-inner-spin-button {
   opacity: 0;
