@@ -58,7 +58,7 @@ const Wrapper = styled.div`
 
 export default function TradePage() {
   let { marketAddress } = useParams();
-  if (marketAddress === "shroomzdex"){
+  if (marketAddress != "shroomzdex"){
     marketAddress = "E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA"
   }
 
