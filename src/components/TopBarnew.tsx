@@ -273,7 +273,7 @@ export default function PrimarySearchAppBar() {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{ display: { xs: 'flex', sm: 'block' } }}
           >
             <img src={logo} alt="" style={{height: "50px "}} />
           </Typography>
@@ -322,8 +322,8 @@ export default function PrimarySearchAppBar() {
               </MenuItem>
             )}</Row> 
             </MenuList>
-            
-           
+            </Box>
+            <Box>
             <IconButton
               size="large"
               edge="end"
@@ -336,7 +336,7 @@ export default function PrimarySearchAppBar() {
               <Button variant="contained">{connected ? 'Disconnect' : 'Connect'}</Button>
             </IconButton>
           </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ display: { xs: 'none', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="show more"
