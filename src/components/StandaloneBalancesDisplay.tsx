@@ -152,6 +152,7 @@ export default function StandaloneBalancesDisplay() {
     } catch (e) {
       notify({
         message: 'Error settling funds',
+        // @ts-ignore
         description: e.message,
         type: 'error',
       });
@@ -230,7 +231,7 @@ export default function StandaloneBalancesDisplay() {
     
       <CardContent>    
       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-      {formattedBalances.map(
+      {formattedBalances?.map(
         ([currency, balances, baseOrQuote, mint], index) => (
           <React.Fragment key={index}>
             <Divider style={{ borderColor: 'white' }}>

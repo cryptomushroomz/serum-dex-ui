@@ -64,7 +64,8 @@ export default function PublicTrades() {
           minHeight: '170px',
           maxHeight: '450px',
           margin: '10px',
-          flex: '1'  
+          flex: '1',
+          overflow: 'hidden'  
         }}>
     
       <CardContent >    

@@ -139,7 +139,10 @@ export default function CoinHeader() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Card flex="auto" style={{ margin: '10px', minheight: '20vh' }}>
+      <Card
+        flex="auto"
+        style={{ margin: '10px', minheight: '20vh', display: 'flex' }}
+      >
         <CardContent>
           <Typography sx={{ fontSize: 14 }} color="text.secondary">
             <div className="card-body">
@@ -175,84 +178,7 @@ export default function CoinHeader() {
                     ) : null}
                   </div>
                 </div>
-
-                <div
-                  style={{ textAlign: 'right' }}
-                  className="col-xl-8 col-lg-8 col-md-8 col-xxl-8"
-                >
-                  <div className="row" style={{ marginTop: '5px' }}>
-                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                      {trText('high_price')}
-                    </div>
-                    <div
-                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                      style={{
-                        borderBottom: `1px solid`,
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {quoteCurrency}
-                    </div>
-                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                      {trText('Volume 24h')}
-                    </div>
-                    <div
-                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                      style={{ borderBottom: `1px solid` }}
-                    >
-                      {marketDayVolume?.volume.toFixed(
-                        getDecimalCount(market?.tickSize),
-                      )}{' '}
-                      <span
-                        style={{
-                          fontSize: '11px',
-                          color: '#999',
-                          letterSpacing: '.05em',
-                        }}
-                      >
-                        {baseCurrency && baseCurrency.replace('*', '')}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                      {trText('Low price')}
-                    </div>
-                    <div
-                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                      style={{
-                        borderBottom: `1px solid`,
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {quoteCurrency}
-                    </div>
-                    <div className="col-xl-3 col-lg-3 col-md-3 col-xxl-3">
-                      {trText('Volume price 24h')}
-                    </div>
-                    <div
-                      className="col-xl-3 col-lg-3 col-md-3 col-xxl-3"
-                      style={{ borderBottom: `1px solid` }}
-                    >
-                      {marketDayVolume?.volumeUsd.toFixed(
-                        getDecimalCount(market?.tickSize),
-                      )}{' '}
-                      <span
-                        style={{
-                          fontSize: '11px',
-                          color: '#999',
-                          letterSpacing: '.05em',
-                        }}
-                      >
-                        {quoteCurrency}
-                      </span>
-                    </div>
-                  </div>
-                </div>
               </div>
-
-              <div style={{ fontSize: '11px', color: '#646464' }}></div>
             </div>
           </Typography>
         </CardContent>

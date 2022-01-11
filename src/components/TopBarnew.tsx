@@ -292,7 +292,7 @@ export default function PrimarySearchAppBar() {
 
               </MenuItem>
               <MenuItem>
-              <Button variant="text" onClick={() => history.push('/market/E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA')}>
+              <Button variant="text" onClick={() => history.push('/swap')}>
                 SWAP
 
             </Button>

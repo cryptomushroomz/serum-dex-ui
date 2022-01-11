@@ -9,6 +9,7 @@ import ListNewMarketPage from './pages/ListNewMarketPage';
 import NewPoolPage from './pages/pools/NewPoolPage';
 import PoolPage from './pages/pools/PoolPage';
 import PoolListPage from './pages/pools/PoolListPage';
+import SwapPage from './pages/SwapPage';
 import { getTradePageUrl } from './utils/markets';
 
 export function Routes() {
@@ -26,6 +27,7 @@ export function Routes() {
             <Route exact path="/orders" component={OpenOrdersPage} />
             <Route exact path="/balances" component={BalancesPage} />
             <Route exact path="/convert" component={ConvertPage} />
+	    <Route exact path="/swap" component={SwapPage} />
             <Route
               exact
               path="/list-new-market"
