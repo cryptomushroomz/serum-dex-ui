@@ -464,7 +464,7 @@ export function SwapButton() {
       variant="contained"
       className={styles.swapButton}
       onClick={sendSwapTransaction}
-      
+      disabled={!canSwap}
     >
       Swap
     </Button>

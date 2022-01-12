@@ -101,42 +101,6 @@ export default function CoinHeader() {
   let avatar = `https://github.com/solana-labs/token-list/blob/main/assets/mainnet/${mintAddress}/logo.png?raw=true`;
   let tickSize = market?.tickSize && getDecimalCount(market?.tickSize);
 
-  async function getDayVolume() {
-    const response = await HistoryApi.getMarketDayVolume(
-      `${baseCurrency}${quoteCurrency}`,
-    );
-
-    console.log('response', response);
-
-    if (response && response.length > 0) {
-      setMarketDayVolume(response[0]);
-    }
-  }
-
-  async function gethistdata() {
-    const response = await HistoryApi.getMarketHistData(
-      `${baseCurrency}${quoteCurrency}`,
-    );
-
-    console.log('response', response);
-
-    if (response && response.length > 0) {
-      setMarketHistData(response[0]);
-    }
-  }
-
-  useInterval(() => {
-    getDayVolume();
-    gethistdata();
-  }, 10000);
-
-  // 최초 1회 실행
-  useEffect(() => {
-    getDayVolume();
-    gethistdata();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <ThemeProvider theme={darkTheme}>
       <Card

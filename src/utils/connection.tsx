@@ -1,5 +1,5 @@
 import { useLocalStorageState } from './utils';
-import { Account, AccountInfo, Connection, PublicKey } from '@solana/web3.js';
+import { Keypair, AccountInfo, Connection, PublicKey } from '@solana/web3.js';
 import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import { setCache, useAsyncData } from './fetch-loop';
 import tuple from 'immutable-tuple';
@@ -8,7 +8,7 @@ import { ConnectionContextValues, EndpointInfo } from './types';
 export const ENDPOINTS: EndpointInfo[] = [
   {
     name: 'mainnet-beta',
-    endpoint: 'https://restless-twilight-smoke.solana-mainnet.quiknode.pro/',
+    endpoint: 'https://solana-api.projectserum.com',
     custom: false,
   },
   { name: 'localnet', endpoint: 'http://127.0.0.1:8899', custom: false },
@@ -41,7 +41,7 @@ export function ConnectionProvider({ children }) {
   // is empty after opening its first time, preventing subsequent subscriptions from receiving responses.
   // This is a hack to prevent the list from every getting empty
   useEffect(() => {
-    const id = connection.onAccountChange(new Account().publicKey, () => {});
+    const id = connection.onAccountChange(new Keypair().publicKey, () => {});
     return () => {
       connection.removeAccountChangeListener(id);
     };
@@ -56,7 +56,7 @@ export function ConnectionProvider({ children }) {
 
   useEffect(() => {
     const id = sendConnection.onAccountChange(
-      new Account().publicKey,
+      new Keypair().publicKey,
       () => {},
     );
     return () => {
