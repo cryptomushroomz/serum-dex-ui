@@ -502,9 +502,9 @@ async function wrapSol(
       SystemProgram.transfer({
         fromPubkey: provider.wallet.publicKey,
         toPubkey: wrappedSolAccount.publicKey,
-        lamports: amount.toNumber(),
-      })
-    );
+        lamports: Number(amount),
+      }),
+    )
   }
   // Initialize the account.
   tx.add(
