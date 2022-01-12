@@ -152,7 +152,7 @@ export type SwapProps = {
    * The initial amount for the `toMint` to use when the component first
    * renders.
    */
-  toAmount?: any | null;
+  toAmount?: number;
 
   /**
    * Provide custom material-ui theme.

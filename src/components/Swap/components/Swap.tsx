@@ -222,11 +222,11 @@ export function SwapTokenForm({
 
   const formattedAmount =
     mintAccount && amount
-      ? amount.toLocaleString("fullwide", {
-          maximumFractionDigits: mintAccount.decimals,
-          useGrouping: false,
-        })
-      : amount;
+      ? amount.toLocaleString("en-US", {
+        maximumFractionDigits: mintAccount.decimals,
+        useGrouping: false,
+      })
+      : '';
 
   return (
     <div className={styles.swapTokenFormContainer} style={style}>
@@ -247,7 +247,7 @@ export function SwapTokenForm({
         </Typography>
       </div>
       <TextField
-        type="text"
+        type="number"
         value={formattedAmount}
         onChange={(e) => setAmount(parseFloat(e.target.value))}
         InputProps={{

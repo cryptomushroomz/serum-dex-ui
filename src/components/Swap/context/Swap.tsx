@@ -38,8 +38,8 @@ export type SwapContext = {
   setFromAmount: (a: number) => void;
 
   // *Expected* amount received from the swap.
-  toAmount: any | null;
-  setToAmount: (a: any) => void;
+  toAmount: number;
+  setToAmount: (a: number) => void;
 
   // Function to flip what we consider to be the "to" and "from" mints.
   swapToFromMints: () => void;
@@ -111,8 +111,8 @@ export function SwapContextProvider(props: any) {
       _setToAmount(0);
       return;
     }
-    _setFromAmount(isNaN(amount) ? 0 : amount);
-    _setToAmount(FEE_MULTIPLIER * ((isNaN(amount) ? 0 : amount) / fair));
+    _setFromAmount(amount);
+    _setToAmount(FEE_MULTIPLIER * (amount / fair));
   };
 
   const setToAmount = (amount: number) => {
@@ -121,10 +121,8 @@ export function SwapContextProvider(props: any) {
       _setToAmount(0);
       return;
     }
-
-
-    _setToAmount(isNaN(amount) ? 0 : amount);
-    _setFromAmount(((isNaN(amount) ? 0 : amount) * fair) / FEE_MULTIPLIER);
+    _setToAmount(amount);
+    _setFromAmount((amount * fair) / FEE_MULTIPLIER);
   };
 
   return (
