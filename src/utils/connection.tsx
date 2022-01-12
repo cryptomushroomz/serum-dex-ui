@@ -131,6 +131,7 @@ export function useAccountInfo(
   );
   useEffect(() => {
     if (!publicKey) {
+      console.log(publicKey);
       return;
     }
     if (accountListenerCount.has(cacheKey)) {
@@ -149,6 +150,7 @@ export function useAccountInfo(
         }
       });
       accountListenerCount.set(cacheKey, { count: 1, subscriptionId });
+      console.log(subscriptionId);
     }
     return () => {
       let currentItem = accountListenerCount.get(cacheKey);
