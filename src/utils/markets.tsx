@@ -241,7 +241,6 @@ export function useAllMarkets() {
         } catch (e) {
           notify({
             message: 'Error loading all market',
-            //@ts-ignore
             description: e.message,
             type: 'error',
           });
@@ -710,7 +709,7 @@ export function useFeeDiscountKeys(): [
       wallet.publicKey,
     );
     if (feeDiscountKey) {
-      setStoredFeeDiscountKey(feeDiscountKey[0]?.pubkey?.toBase58());
+      setStoredFeeDiscountKey(feeDiscountKey[0].pubkey.toBase58());
     }
     return feeDiscountKey;
   };
