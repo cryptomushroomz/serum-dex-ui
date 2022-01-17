@@ -10,7 +10,7 @@ import {
   AccountInfo as TokenAccount,
 } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { isValidPublicKey } from "../utils/utils"
+import { isValidPublicKey } from "../../../utils/utils";
 
 export async function getOwnedAssociatedTokenAccounts(
   connection: Connection,
