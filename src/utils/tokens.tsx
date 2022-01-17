@@ -10,6 +10,10 @@ import {useAsyncData} from './fetch-loop';
 import tuple from 'immutable-tuple';
 import BN from 'bn.js';
 import {useMemo} from 'react';
+import {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  Token,
+} from "@solana/spl-token";
 
 export const ACCOUNT_LAYOUT = BufferLayout.struct([
   BufferLayout.blob(32, 'mint'),
@@ -69,6 +73,56 @@ export function getOwnedAccountsFilters(publicKey: PublicKey) {
 export const TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
 );
+
+export async function getOwnedAssociatedTokenAccounts(
+  connection: Connection,
+  publicKey: PublicKey
+) {
+  let filters = getOwnedAccountsFilters(publicKey);
+  // @ts-ignore
+  let resp = await connection.getProgramAccounts(TOKEN_PROGRAM_ID, {
+    commitment: connection.commitment,
+    filters,
+  });
+
+  const accs = resp
+    .map(({ pubkey, account: { data, executable, owner, lamports } }: any) => ({
+      publicKey: new PublicKey(pubkey),
+      accountInfo: {
+        data,
+        executable,
+        owner: new PublicKey(owner),
+        lamports,
+      },
+    }))
+    .map(({ publicKey, accountInfo }: any) => {
+      return { publicKey, account: parseTokenAccountData(accountInfo.data) };
+    });
+
+  return (
+    (
+      await Promise.all(
+        accs
+          // @ts-ignore
+          .map(async (ta) => {
+            const ata = await Token.getAssociatedTokenAddress(
+              ASSOCIATED_TOKEN_PROGRAM_ID,
+              TOKEN_PROGRAM_ID,
+              ta.account.mint,
+              publicKey
+            );
+            return [ta, ata];
+          })
+      )
+    )
+      // @ts-ignore
+      .filter(([ta, ata]) => ta.publicKey.equals(ata))
+      // @ts-ignore
+      .map(([ta]) => ta)
+  );
+}
+
+
 
 export async function getOwnedTokenAccounts(
   connection: Connection,
