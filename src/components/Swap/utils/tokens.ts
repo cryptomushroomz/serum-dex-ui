@@ -10,6 +10,7 @@ import {
   AccountInfo as TokenAccount,
 } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
+import { isValidPublicKey } from "../utils/utils"
 
 export async function getOwnedAssociatedTokenAccounts(
   connection: Connection,
@@ -66,14 +67,19 @@ const ACCOUNT_LAYOUT = BufferLayout.struct([
   BufferLayout.blob(93),
 ]);
 
+export function getBigNumber(num: any) {
+  return num === undefined || num === null ? 0 : parseFloat(num.toString())
+}
+
 export function parseTokenAccountData(data: Buffer): TokenAccount {
   // @ts-ignore
   let { mint, owner, amount } = ACCOUNT_LAYOUT.decode(data);
+  console.log('amount: ', amount)
   // @ts-ignore
   return {
     mint: new PublicKey(mint),
     owner: new PublicKey(owner),
-    amount: new BN(amount),
+    amount: new BN(getBigNumber(amount)),
   };
 }
 

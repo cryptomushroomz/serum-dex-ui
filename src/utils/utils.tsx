@@ -56,6 +56,12 @@ export function getDecimalCount(value): number {
   return 0;
 }
 
+export function isNum(value): boolean {
+  return value !== null
+    && value !== undefined
+    && typeof value === 'number'
+}
+
 export function divideBnToNumber(numerator: BN, denominator: BN): number {
   const quotient = numerator.div(denominator).toNumber();
   const rem = numerator.umod(denominator);
