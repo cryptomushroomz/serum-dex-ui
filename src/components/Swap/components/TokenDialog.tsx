@@ -152,3 +152,16 @@ function TokenListItem({
     </ListItem>
   );
 }
+
+function TokenName({ tokenInfo }: { tokenInfo: TokenInfo }) {
+  return (
+    <div style={{ marginLeft: "16px" }}>
+      <Typography style={{ fontWeight: "bold" }}>
+        {tokenInfo?.symbol}
+      </Typography>
+      <Typography color="textSecondary" style={{ fontSize: "14px" }}>
+        {tokenInfo?.name}
+      </Typography>
+    </div>
+  );
+}
