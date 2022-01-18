@@ -3,6 +3,7 @@
 
 import * as BufferLayout from "buffer-layout";
 import { BN } from "@project-serum/anchor";
+import {Big}  from "big.js";
 import {
   TOKEN_PROGRAM_ID,
   AccountInfo as TokenAccount,
@@ -105,7 +106,7 @@ export function parseTokenAccountData(data: Buffer): TokenAccount {
   return {
     mint: new PublicKey(mint),
     owner: new PublicKey(owner),
-    amount: new BN(getBigNumber(amount)),
+    amount: new Big(amount),
   };
 }
 
