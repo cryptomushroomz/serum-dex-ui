@@ -9,7 +9,7 @@ import {
   Token,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
-import { getOwnedTokenAccounts, parseTokenAccountData, getMultipleTokenAccounts } from "../../../utils/tokens";
+import { getOwnedTokenAccounts, parseTokenAccountData, getMultipleTokenAccounts } from "../utils/tokens";
 import { SOL_MINT } from '../utils/pubkeys'
 
 export type TokenContext = {
