@@ -8,7 +8,7 @@ import {
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { Market } from "@project-serum/serum";
-import { SRM_MINT, USDC_MINT, USDT_MINT, SHROOMZ_MINT, WRAPPED_SOL_MINT } from "../utils/pubkeys";
+import { SRM_MINT, USDC_MINT, USDT_MINT, SHROOMZ_MINT, WRAPPED_SOL_MINT, SOL_MINT } from "../utils/pubkeys";
 import {
   useFairRoute,
   useRouteVerbose,
