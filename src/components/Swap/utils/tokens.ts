@@ -6,77 +6,29 @@ import { BN } from "@project-serum/anchor";
 import {Big}  from "big.js";
 import {
   TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+  Token,
   AccountInfo as TokenAccount,
 } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { isValidPublicKey } from "../../../utils/utils";
 
-export async function getMultipleTokenAccounts(
-  connection: Connection,
-  wallet: PublicKey, 
-  mints: Array<PublicKey>) {
-
-    let tokenAccounts = Array<{ publicKey: PublicKey, account: TokenAccount }>()
-
-    for (const mint of mints) {
-
-      if(!isValidPublicKey(mint)) {
-        console.log('Invalid public key: ', mint)
-        continue
-      }
-
-      const filter = {
-        mint
-      }
-
-      const resp = await connection.getTokenAccountsByOwner(wallet, filter, 'recent')
-        .then(res => res.value)
-        .catch(err => {
-          console.log('Failed to get token account: ', filter.mint.toString())
-          console.log('Err: ', err)
-          return null
-        })
-
-      if(resp) {
-        const accounts = resp.map(({ pubkey, account: { data, executable, owner, lamports } }: any) => ({
-          publicKey: pubkey,
-          accountInfo: {
-            data: data,
-            executable,
-            owner: new PublicKey(owner),
-            lamports,
-          },
-        }))
-        .map(({ publicKey, accountInfo }: any) => {
-          return { publicKey, account: parseTokenAccountData(accountInfo.data) };
-        });
-  
-        tokenAccounts = tokenAccounts.concat(accounts)
-      }
-    }
-
-    return tokenAccounts
-  }
-
-export async function getOwnedTokenAccounts(
+export async function getOwnedAssociatedTokenAccounts(
   connection: Connection,
   publicKey: PublicKey
 ) {
   let filters = getOwnedAccountsFilters(publicKey);
   // @ts-ignore
-  let resp = await connection.getProgramAccounts(
-    TOKEN_PROGRAM_ID,
-    {
-      filters,
-      encoding: 'base64'
-    },
-  );
+  let resp = await connection.getProgramAccounts(TOKEN_PROGRAM_ID, {
+    commitment: connection.commitment,
+    filters,
+  });
 
-  return resp
+  const accs = resp
     .map(({ pubkey, account: { data, executable, owner, lamports } }: any) => ({
       publicKey: new PublicKey(pubkey),
       accountInfo: {
-        data: data,
+        data,
         executable,
         owner: new PublicKey(owner),
         lamports,
@@ -85,6 +37,28 @@ export async function getOwnedTokenAccounts(
     .map(({ publicKey, accountInfo }: any) => {
       return { publicKey, account: parseTokenAccountData(accountInfo.data) };
     });
+
+  return (
+    (
+      await Promise.all(
+        accs
+          // @ts-ignore
+          .map(async (ta) => {
+            const ata = await Token.getAssociatedTokenAddress(
+              ASSOCIATED_TOKEN_PROGRAM_ID,
+              TOKEN_PROGRAM_ID,
+              ta.account.mint,
+              publicKey
+            );
+            return [ta, ata];
+          })
+      )
+    )
+      // @ts-ignore
+      .filter(([ta, ata]) => ta.publicKey.equals(ata))
+      // @ts-ignore
+      .map(([ta]) => ta)
+  );
 }
 
 const ACCOUNT_LAYOUT = BufferLayout.struct([
