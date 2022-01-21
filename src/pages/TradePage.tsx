@@ -30,7 +30,6 @@ import { notify } from '../utils/notifications';
 import { useHistory, useParams } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import CoinHeader from '../components/CoinHeadernew';
-
 import { TVChartContainer } from '../components/TradingView';
 import { Market } from '@project-serum/serum';
 import { basename } from 'path';
@@ -172,6 +171,7 @@ export function TradePageInner() {
         onClose={() => setAddMarketVisible(false)}
         onAddCustomMarket={onAddCustomMarket}    
       />
+
       <Wrapper>
         <Row
           align="middle"

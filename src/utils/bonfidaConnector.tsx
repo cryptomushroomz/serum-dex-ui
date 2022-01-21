@@ -1,7 +1,7 @@
 import { BonfidaTrade } from './types';
 
 export default class BonfidaApi {
-  static URL: string = 'http://cryptomushroomz.io:8077/';
+  static URL: string = 'https://api.cryptomushroomz.io/';
 
   static async get(path: string) {
     try {
@@ -23,4 +23,4 @@ export default class BonfidaApi {
   }
 }
 
-export const BONFIDA_DATA_FEED = 'http://cryptomushroomz.io:8077/tv';
+export const BONFIDA_DATA_FEED = 'https://api.cryptomushroomz.io/';
