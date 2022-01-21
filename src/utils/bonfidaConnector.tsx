@@ -23,4 +23,4 @@ export default class BonfidaApi {
   }
 }
 
-export const BONFIDA_DATA_FEED = 'https://api.cryptomushroomz.io/';
+export const BONFIDA_DATA_FEED = 'https://api.cryptomushroomz.io';
