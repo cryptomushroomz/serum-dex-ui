@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Orderbook from '../components/Orderbook';
 import UserInfoTable from '../components/UserInfoTable';
 import StandaloneBalancesDisplay from '../components/StandaloneBalancesDisplay';
+import FloatingElement from '../components/layout/FloatingElement';
 import {
   getMarketInfos,
   getTradePageUrl,
@@ -187,6 +188,7 @@ export function TradePageInner() {
               onDeleteCustomMarket={onDeleteCustomMarket}
             />
           </Col>
+	  
                     {market ? (
             <Col>
               <Popover
@@ -205,6 +207,7 @@ export function TradePageInner() {
               onClick={() => setAddMarketVisible(true)}
             />
           </Col>
+          
         </Row>
         {component}
       </Wrapper>
@@ -319,129 +322,64 @@ export function MarketSelector({
 
 const RenderNormal = ({ onChangeOrderRef, onPrice, onSize }) => {
   return (
-    <><Row
+    <Row
       style={{
-        flexWrap: 'wrap',
-        display: 'flex',
+        minHeight: '900px',
+        flexWrap: 'nowrap',
       }}
     >
-      <Col style={{ height: '100%', flex: '6', display:'flex', flexFlow: 'column' }}>
-         <div style={{ display: 'flexgrow'}}>
-        <CoinHeader />
-        </div>
-        <div style={{ display: 'flex', minHeight: '60vh'}}>
+      <Col flex="auto" style={{ display: 'flex', flexDirection: 'column' }}>
+        <FloatingElement style={{ flex: 1, minHeight: '600px', padding: 0, overflow: 'hidden' }}>
           <TVChartContainer />
-        </div>
-        <div style={{ display: 'flexgrow'}}>
+        </FloatingElement>
         <UserInfoTable />
-        </div>
       </Col>
-      <Col style={{ flex: '2', display:'flex', flexFlow: 'column'}}>
-        <div style={{display:'flex', flex: '1', maxHeight: '40vh', overflow: 'hidden'}} >
-          <Orderbook smallScreen={true}
-            depth={9}
-            onPrice={onPrice}
-            onSize={onSize} />
-        </div>
-        <div style={{display:'flex', flex: '1'}} >
-          <TradesTable />
-        </div>
+      <Col flex={'300px'} style={{ display: 'flex', flexDirection: 'column' }}>
+        <Orderbook smallScreen={false} onPrice={onPrice} onSize={onSize} />
+        <TradesTable smallScreen={false} />
       </Col>
-      <Col
-        style={{flex: "3", display:'flex', flexFlow: 'column' }}
-      > <div style={{display:'flex', flex: '1'}} >
-        <TradeForm setChangeOrderRef={onChangeOrderRef} />
-        </div>
-        <div style={{display:'flex', flex: '1'}} >
+      <Col flex="370px" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <CoinHeader/>
+        <TradeForm setChangeOrderRef={onChangeOrderRef} style={{ minHeight: 300 }} />
         <StandaloneBalancesDisplay />
-        </div>
       </Col>
     </Row>
-    </>
   );
 };
 
 const RenderSmall = ({ onChangeOrderRef, onPrice, onSize }) => {
   return (
-<><Row
-      style={{
-        flexWrap: 'wrap',
-        display: 'flex',
-      }}
-    >
-      <Col style={{ height: '100%', flex: '6', display:'flex', flexFlow: 'column' }}>
-         <div style={{ display: 'flexgrow'}}>
-        <CoinHeader />
-        </div>
-        <div style={{ display: 'flex', minHeight: '160vh'}}>
-          <TVChartContainer />
-        </div>
-      
-      </Col>
-      <Col style={{ flex: '2', display:'flex', flexFlow: 'column'}}>
-        <div style={{display:'flex', flex: '1'}} >
-          <Orderbook smallScreen={true}
-            depth={9}
-            onPrice={onPrice}
-            onSize={onSize} />
-        </div>
-        <div style={{display:'flex', flex: '1'}} >
-          <TradesTable />
-        </div>
-      </Col>
-      <Col
-        style={{flex: "3", display:'flex', flexFlow: 'column' }}
-      > <div style={{display:'flex', flex: '1'}} >
-        <TradeForm setChangeOrderRef={onChangeOrderRef} />
-        </div>
-        <div style={{display:'flex', flex: '1'}} >
-        <StandaloneBalancesDisplay />
-        </div>
-      </Col>
-    </Row>
-    <Row>
-
-    <div>
-        <UserInfoTable />
-        </div>
-    </Row>
-    </>
-  );
-};
-
-const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
-  return (
-    <> <Row style={{ display: 'flexgrow'}}>
-   
-        <CoinHeader />
- 
+    <>
+      <Row>
+        <Col flex="2" style={{ display: 'flex', flexDirection: 'column' }}>
+          <FloatingElement style={{ flex: 2, minHeight: '150px', padding: 0, overflow: 'hidden' }}>
+            <TVChartContainer />
+          </FloatingElement>
+        </Col>
+        <Col flex="1">
+          <CoinHeader/>
+          <TradeForm setChangeOrderRef={onChangeOrderRef} />
+	  
+        </Col>
       </Row>
-      <Row style={{ height: '70vh' }}>
-    
-    <Col flex="auto" style={{width: '100%', margin: '0 5px', height: 'calc(100% - 8px)', marginTop: '5px', borderRadius: '8px' , display: 'flex' }}>   
-           <TVChartContainer />
-       </Col>
-  </Row>
-  <Row>
-    <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
-      <TradeForm style={{ flex: 1 }} setChangeOrderRef={onChangeOrderRef} />
-    </Col>
-  </Row>
-  <Row>
-    <Col flex="auto">
-      <StandaloneBalancesDisplay />
-    </Col>
-  </Row>
-  <Row
-    style={{
-      height: '500px', overflow: 'hidden'
-    }}
-  >
-    <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-      <Orderbook smallScreen={true} onPrice={onPrice} onSize={onSize} />
-    </Col>
-    <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
-      <TradesTable/>
+      <Row>
+        {/* style={{
+          height: '950px',
+        }} */}
+        <Col flex="1" style={{ maxHeight: '450px', display: 'flex' }}>
+          <Orderbook smallScreen={true} onPrice={onPrice} onSize={onSize} />
+        </Col>
+        <Col
+          flex="1"
+          style={{
+            height: '450px',
+            display: 'flex',
+          }}
+        > 
+	  <StandaloneBalancesDisplay />
+        </Col>
+        <Col flex="1" style={{ maxHeight: '450px', display: 'flex' }}>
+          <TradesTable smallScreen={true} />
     </Col>
   </Row>
   <Row>
@@ -454,3 +392,39 @@ const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
   );
 };
 
+const RenderSmaller = ({ onChangeOrderRef, onPrice, onSize }) => {
+  return (
+    <>
+      <Row>
+        <Col flex="auto" style={{ display: 'flex', flexDirection: 'column' }}>
+	<CoinHeader/>
+          <FloatingElement style={{ flex: "1", minHeight: '600px', padding: 0, overflow: 'hidden' }}>
+            
+	    <TVChartContainer />
+          </FloatingElement>
+        </Col>
+      </Row>.
+      <Row>
+        <Col xs={24} sm={12} style={{ height: '50%', display: 'flex' }}>
+          <TradeForm style={{ flex: 1 }} setChangeOrderRef={onChangeOrderRef} />
+        </Col>
+        <Col xs={24} sm={12}>
+          <StandaloneBalancesDisplay />
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={24} sm={12} style={{ height: '100%', display: 'flex' }}>
+          <Orderbook smallScreen={false} onPrice={onPrice} onSize={onSize} />
+        </Col>
+        <Col xs={24} sm={12} style={{ height: '50%', display: 'flex', maxHeight: '500px' }}>
+          <TradesTable smallScreen={true} />
+        </Col>
+      </Row>
+      <Row>
+        <Col flex="auto" style={{ height: '100%', display: 'flex' }}>
+          <UserInfoTable />
+        </Col>
+      </Row>
+    </>
+  );
+};

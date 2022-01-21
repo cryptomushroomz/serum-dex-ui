@@ -1,5 +1,5 @@
-import { Col, Row } from 'antd';
-import React from 'react';
+import { Col, Row, Divider } from 'antd';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useMarket, useBonfidaTrades } from '../utils/markets';
 import { getDecimalCount } from '../utils/utils';
@@ -49,30 +49,34 @@ const SizeTitle = styled(Row)`
   color: #434a59;
 `;
 
-export default function PublicTrades() {
+export default function PublicTrades({ smallScreen }) {
   const { baseCurrency, quoteCurrency, market } = useMarket();
   const [trades, loaded] = useBonfidaTrades();
+  const [height, setHeight] = useState(400);
 
   return (
     
 
-   
+    <React.Fragment>
     <ThemeProvider theme={darkTheme}>  
-    <Card style={
-      
-     {
-          minHeight: '170px',
-          maxHeight: '450px',
-          margin: '10px',
-          flex: '1',
-          overflow: 'hidden'  
-        }}>
+    <Card  style={ smallScreen
+          ? {
+            flex: 1, overflow: 'hidden', margin: '10px'
+          }
+          : {
+            marginTop: '10px',
+            flex: 1,
+            overflow: 'hidden',
+	    margin: '10px'
+          }
+      }
+    >
     
       <CardContent >    
       <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-
+       <Divider>
         Recent Market Trades
-        
+        </Divider>
       <SizeTitle>
         <Col span={8}>Price ({quoteCurrency}) </Col>
         <Col span={8} style={{ textAlign: 'right' }}>
@@ -85,8 +89,9 @@ export default function PublicTrades() {
       {!!trades && loaded && (
         <div
           style={{
+            marginRight: '-20px',
+            paddingRight: '5px',
             overflowY: 'scroll',
-            
           }}
         >
           {trades.map((trade: BonfidaTrade, i: number) => (
@@ -121,6 +126,7 @@ export default function PublicTrades() {
     </CardContent>
     </Card>
     </ThemeProvider>
+    </React.Fragment>
 
   );
 }
