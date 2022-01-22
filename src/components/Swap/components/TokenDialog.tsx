@@ -14,12 +14,9 @@ import {
   Typography,
   Tabs,
   Tab,
-  ListItemText,
-  ListItemAvatar,
-  Box,
 } from "@material-ui/core";
 import { TokenIcon } from "./Swap";
-import { useSwappableTokens, useTokenListContext } from "../context/TokenList";
+import { useSwappableTokens } from "../context/TokenList";
 import { useMediaQuery } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -144,32 +141,27 @@ function TokenListItem({
   onClick: (mint: PublicKey) => void;
 }) {
   const mint = new PublicKey(tokenInfo.address);
-  const { ownedTokensDetailed } = useTokenListContext();
-  const details = ownedTokensDetailed.filter(
-    (t) => t.address === tokenInfo.address
-  )?.[0];
-
   return (
     <ListItem
       button
       onClick={() => onClick(mint)}
       style={{ padding: "10px 20px" }}
     >
-      <ListItemAvatar>
-        <TokenIcon
-          mint={mint}
-          style={{ width: "30px", borderRadius: "15px" }}
-        />
-      </ListItemAvatar>
-      <ListItemText primary={tokenInfo?.symbol} secondary={tokenInfo?.name} />
-      {+details?.balance > 0 && (
-        <Box mr={1} textAlign="end">
-          <ListItemText
-            primary={details?.balance}
-            secondary={`$${details?.usd}`}
-          />
-        </Box>
-      )}
+      <TokenIcon mint={mint} style={{ width: "30px", borderRadius: "15px" }} />
+      <TokenName tokenInfo={tokenInfo} />
     </ListItem>
+  );
+}
+
+function TokenName({ tokenInfo }: { tokenInfo: TokenInfo }) {
+  return (
+    <div style={{ marginLeft: "16px" }}>
+      <Typography style={{ fontWeight: "bold" }}>
+        {tokenInfo?.symbol}
+      </Typography>
+      <Typography color="textSecondary" style={{ fontSize: "14px" }}>
+        {tokenInfo?.name}
+      </Typography>
+    </div>
   );
 }

@@ -958,6 +958,7 @@ export function useWalletBalancesForAllMarkets(): {
   balance: number;
 }[] {
   const [tokenAccounts] = useTokenAccounts();
+  console.log('tokenAccounts: ', tokenAccounts);
   const { connected } = useWallet();
   const [mintInfos, mintInfosConnected] = useMintInfos();
 
