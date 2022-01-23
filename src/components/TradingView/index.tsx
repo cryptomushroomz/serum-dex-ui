@@ -54,6 +54,7 @@ export const TVChartContainer = () => {
 
   const tvWidgetRef = React.useRef<IChartingLibraryWidget | null>(null);
   const { market } = useMarket();
+  const marketAddress = market?.address.toBase58();
 
   const chartProperties = JSON.parse(
     localStorage.getItem('chartproperties') || '{}',
@@ -64,6 +65,7 @@ export const TVChartContainer = () => {
       restrictTo: ['scalesProperties', 'paneProperties', 'tradingProperties'],
     });
 
+    const bg = '#222c35';
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol:
         USE_MARKETS.find(
@@ -94,6 +96,8 @@ export const TVChartContainer = () => {
       theme: defaultProps.theme === 'Dark' ? 'Dark' : 'Light',
       overrides: {
         ...savedProperties,
+        "paneProperties.background": bg,
+        "paneProperties.backgroundType": "solid",
         'mainSeriesProperties.candleStyle.upColor': '#41C77A',
         'mainSeriesProperties.candleStyle.downColor': '#F23B69',
         'mainSeriesProperties.candleStyle.borderUpColor': '#41C77A',
