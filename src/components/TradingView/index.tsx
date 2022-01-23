@@ -98,6 +98,8 @@ export const TVChartContainer = () => {
         ...savedProperties,
         "paneProperties.background": bg,
         "paneProperties.backgroundType": "solid",
+	"paneProperties.crossHairProperties.color" : "#41C77A",
+	'paneProperties.legendProperties.backgroundTransparency': true,
         'mainSeriesProperties.candleStyle.upColor': '#41C77A',
         'mainSeriesProperties.candleStyle.downColor': '#F23B69',
         'mainSeriesProperties.candleStyle.borderUpColor': '#41C77A',
