@@ -1,4 +1,5 @@
-import {Market, MARKETS, OpenOrders, Orderbook, TOKEN_MINTS, TokenInstructions,} from '@project-serum/serum';
+import { Market, OpenOrders, Orderbook, TokenInstructions } from '@project-serum/serum';
+import { MARKETS, TOKEN_MINTS } from './shroomzmarket';
 import {PublicKey} from '@solana/web3.js';
 import React, {useContext, useEffect, useState} from 'react';
 import {divideBnToNumber, floorToDecimal, getTokenMultiplierFromDecimals, sleep, useLocalStorageState,} from './utils';
@@ -27,164 +28,7 @@ import BonfidaApi from './bonfidaConnector';
 // Used in debugging, should be false in production
 const _IGNORE_DEPRECATED = false;
 
-const SHROOMZ_MARKETS = [
-  {
-    coin_name: "SHROOMZ",
-    pair: "SHROOMZ/USDC",
-    mint: "2vRgBSJEVPXxayrhXoazQyCKSGFYQG3ZdfT2Gv5gZykL",
-    market: "E9XAtU18PXeSMcz5gkAkZ6yfj1E5nzY21x576ZvEg9VA",
-  },
-  {
-    coin_name: "PANDA",
-    pair: "PANDA/USDC",
-    mint: "Aw8qLRHGhMcKq7rxs5XBNCd9oe3BvoAhpNMVz7AdGmty",
-    market: "GdmQtZpXZiasZi6TVsDHVLeNvPZY1dmuQ82KXDcKEJPy",
-  },
-  {
-    coin_name: "DOLPHIN",
-    pair: "DOLPHIN/USDC",
-    mint: "BYvRESCxiFvzz2yTckNB6wi8yuYiobQU7NHMUbVE7Wu5",
-    market: "atehN2dUwDgtXhzTujyW1A3dihkukmykE9fC8TeMpTa",
-  },
-  {
-    coin_name: "SAMO",
-    pair: "SAMO/USDC",
-    mint: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
-    market: "FR3SPJmgfRSKKQ2ysUZBu7vJLpzTixXnjzb84bY3Diif",
-  },
-  {
-    coin_name: "OOGI",
-    pair: "OOGI/USDC",
-    mint: "H7Qc9APCWWGDVxGD5fJHmLTmdEgT9GFatAKFNg6sHh8A",
-    market: "ANUCohkG9gamUn6ofZEbnzGkjtyMexDhnjCwbLDmQ8Ub",
-  },
-  {
-    coin_name: "SONAR",
-    pair: "SONAR/USDC",
-    mint: "sonarX4VtVkQemriJeLm6CKeW3GDMyiBnnAEMw1MRAE",
-    market: "9YdVSNrDsKDaGyhKL2nqEFKvxe3MSqMjmAvcjndVg1kj",
-  },
-  {
-    coin_name: "ORCA",
-    pair: "ORCA/USDC",
-    mint: "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE",
-    market: "8N1KkhaCYDpj3awD58d85n973EwkpeYnRp84y1kdZpMX",
-  },
-  {
-    coin_name: "STEP",
-    pair: "STEP/USDC",
-    mint: "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT",
-    market: "97qCB4cAVSTthvJu3eNoEx6AY6DLuRDtCoPm5Tdyg77S",
-  },
-  {
-    coin_name: "TULIP",
-    pair: "TULIP/USDC",
-    mint: "TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T1uoWBk6FDs",
-    market: "8GufnKq7YnXKhnB3WNhgy5PzU9uvHbaaRrZWQK6ixPxW",
-  },
-  {
-    coin_name: "TULIP",
-    pair: "TULIP/RAY",
-    mint: "TuLipcqtGVXP9XR62wM8WWCm6a9vhLs7T1uoWBk6FDs",
-    market: "GXde1EjpxVV5fzhHJcZqdLmsA3zmaChGFstZMjWsgKW7",
-  },
-  {
-    coin_name: "IN",
-    pair: "IN/USDC",
-    mint: "inL8PMVd6iiW3RCBJnr5AsrRN6nqr4BTrcNuQWQSkvY",
-    market: "49vwM54DX3JPXpey2daePZPmimxA4CrkXLZ6E1fGxx2Z",
-  },
-  {
-    coin_name: "GENE",
-    pair: "GENE/USDC",
-    mint: "GENEtH5amGSi8kHAtQoezp1XEXwZJ8vcuePYnXdKrMYz",
-    market: "FwZ2GLyNNrFqXrmR8Sdkm9DQ61YnQmxS6oobeH3rrLUM",
-  },
-  {
-    coin_name: "WOOF",
-    pair: "WOOF/USDC",
-    mint: "9nEqaUcb16sQ3Tn1psbkWqyhPdLmfHWjKGymREjsAgTE",
-    market: "CwK9brJ43MR4BJz2dwnDM7EXCNyHhGqCJDrAdsEts8n5",
-  },
-  {
-    coin_name: "CWAR",
-    pair: "CWAR/USDC",
-    mint: "HfYFjMKNZygfMC8LsQ8LtpPsPxEJoXJx4M6tqi75Hajo",
-    market: "CDYafmdHXtfZadhuXYiR7QaqmK9Ffgk2TA8otUWj9SWz",
-  },
-  {
-    coin_name: "CAVE",
-    pair: "CAVE/USDC",
-    mint: "4SZjjNABoqhbd4hnapbvoEPEqT8mnNkfbEoAwALf1V8t",
-    market: "KrGK6ZHyE7Nt35D7GqAKJYAYUPUysGtVBgTXsJuAxMT",
-  },
-  {
-    coin_name: "DFL",
-    pair: "DFL/USDC",
-    mint: "DFL1zNkaGPWm1BqAVqRjCZvHmwTFrEaJtbzJWgseoNJh",
-    market: "9UBuWgKN8ZYXcZWN67Spfp3Yp67DKBq1t31WLrVrPjTR",
-  },
-  {
-    coin_name: "SHILL",
-    pair: "SHILL/USDC",
-    mint: "9fvEiugrurd2kzSkqFjhGaUFiZUfP4UWbfprmFEm51M9",
-    market: "3KNXNjf1Vp3V5gYPjwnpALYCPhWpRXsPPC8CWBXqmnnN",
-  },
-  {
-    coin_name: "APT",
-    pair: "APT/USDC",
-    mint: "APTtJyaRX5yGTsJU522N4VYWg3vCvSb65eam5GrPT5Rt",
-    market: "ATjWoJDChATL7E5WVeSk9EsoJAhZrHjzCZABNx3Miu8B",
-  },
-  {
-    coin_name: "MEW",
-    pair: "MEW/USDC",
-    mint: "9BiqBycZWkWH21vYqCbu2bL1PjZbR5GxWGA8LQkShbyt",
-    market: "9xTPHXTEnXC8eqmtDntDtKLsrq15Kbwy28ucaWJN2qzH",
-  },
-  {
-    coin_name: "OTR",
-    pair: "OTR/USDC",
-    mint: "6TgvYd7eApfcZ7K5Mur7MaUQ2xT7THB4cLHWuMkQdU5Z",
-    market: "4k4WXdmrWjCG71E4pxMs6SQRRB5cypGNYatKb2iMnqN4",
-  },
-  {
-    coin_name: "MEME",
-    pair: "MEME/USDC",
-    mint: "6DNkUoMa6vNo3CsxAw5XMJhjmdPbPBENHJ6w35eMXESo",
-    market: "GB3C6u9Bstk3JwAFwkjRm8N6b3HaTKLhdD91W9ScMTmM",
-  },
-  {
-    coin_name: "SOLAB",
-    pair: "SOLAB/USDC",
-    mint: "GLmaRDRmYd4u3YLfnj9eq1mrwxa1YfSweZYYZXZLTRdK",
-    market: "5m7CdEhV6Tq5KnSCy5Cg4w6ug5DFCcHrUJ8JMzKVDdav",
-  },
-  {
-    coin_name: "SOLAPE",
-    pair: "SOLAPE/USDC",
-    mint: "GHvFFSZ9BctWsEc5nujR1MTmmJWY7tgQz2AXE6WVFtGN",
-    market: "4zffJaPyeXZ2wr4whHgP39QyTfurqZ2BEd4M5W6SEuon",
-  },
-  {
-    coin_name: "MOLA",
-    pair: "MOLA/USDC",
-    mint: "6uB5eEC8SzMbUdsPpe3eiNvHyvxdqUWnDEtpFQxkhNTP",
-    market: "HSpeWWRqBJ4HH2FPyfDhoN1AUq3gYoDenQGZASSqzYW1",
-  },
-  {
-    coin_name: "CATO",
-    pair: "CATO/USDC",
-    mint: "5p2zjqCd1WJzAVgcEnjhb9zWDU7b9XVhFhx4usiyN7jB",
-    market: "9fe1MWiKqUdwift3dEpxuRHWftG72rysCRHbxDy6i9xB",
-  },
-  {
-    coin_name: "DEGN",
-    pair: "DEGN/USDC",
-    mint: "A9UhP1xfQHWUhSd54NgKPub2XB3ZuQMdPEvf9aMTHxGT",
-    market: "4j2JjUFFwzsq9fXpTqh7PGpqniMzQtKApXfz8pEv1AeK",
-  },
-];
+
 
 export function getTokenSymbolImageUrl(quote: string) {
   return `https://github.com/solana-labs/token-list/tree/main/assets/mainnet/${quote.toLowerCase()}/logo.png?raw=true`
@@ -192,24 +36,10 @@ export function getTokenSymbolImageUrl(quote: string) {
 
 
   
-let shroomzmarkets = _IGNORE_DEPRECATED
+export const USE_MARKETS: MarketInfo[] = _IGNORE_DEPRECATED
   ? MARKETS.map((m) => ({ ...m, deprecated: false }))
   : MARKETS;
-let mnttoken = TOKEN_MINTS;
-SHROOMZ_MARKETS.forEach((market) => {
-  shroomzmarkets.push({
-    "address": new PublicKey(market.market),
-    "name": market.pair,
-    "programId": new PublicKey("9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin"),
-    "deprecated": false,
-  });
 
-  mnttoken.push({
-    name: market.coin_name,
-    address: new PublicKey(market.mint),
-  });
-});
-export const USE_MARKETS: MarketInfo[] = shroomzmarkets;
 
 export function useMarketsList() {
   return USE_MARKETS.filter(({ name, deprecated }) => !deprecated && !process.env.REACT_APP_EXCLUDE_MARKETS?.includes(name));
@@ -260,6 +90,72 @@ export function useAllMarkets() {
   );
 }
 
+export function useUnmigratedOpenOrdersAccounts() {
+  const connection = useConnection();
+  const { wallet } = useWallet();
+
+  async function getUnmigratedOpenOrdersAccounts(): Promise<OpenOrders[]> {
+    if (!wallet || !connection || !wallet.publicKey) {
+      return [];
+    }
+    console.log('refreshing useUnmigratedOpenOrdersAccounts');
+    let deprecatedOpenOrdersAccounts: OpenOrders[] = [];
+    const deprecatedProgramIds = Array.from(
+      new Set(
+        USE_MARKETS.filter(
+          ({ deprecated }) => deprecated,
+        ).map(({ programId }) => programId.toBase58()),
+      ),
+    ).map((publicKeyStr) => new PublicKey(publicKeyStr));
+    let programId: PublicKey;
+    for (programId of deprecatedProgramIds) {
+      try {
+        const openOrdersAccounts = await OpenOrders.findForOwner(
+          connection,
+          wallet.publicKey,
+          programId,
+        );
+        deprecatedOpenOrdersAccounts = deprecatedOpenOrdersAccounts.concat(
+          openOrdersAccounts
+            .filter(
+              (openOrders) =>
+                openOrders.baseTokenTotal.toNumber() ||
+                openOrders.quoteTokenTotal.toNumber(),
+            )
+            .filter((openOrders) =>
+              USE_MARKETS.some(
+                (market) =>
+                  market.deprecated && market.address.equals(openOrders.market),
+              ),
+            ),
+        );
+      } catch (e) {
+        console.log(
+          'Error loading deprecated markets',
+          programId?.toBase58(),
+          e.message,
+        );
+      }
+    }
+    // Maybe sort
+    return deprecatedOpenOrdersAccounts;
+  }
+
+  const cacheKey = tuple(
+    'getUnmigratedOpenOrdersAccounts',
+    connection,
+    wallet?.publicKey?.toBase58(),
+  );
+  const [accounts] = useAsyncData(getUnmigratedOpenOrdersAccounts, cacheKey, {
+    refreshInterval: _VERY_SLOW_REFRESH_INTERVAL,
+  });
+
+  return {
+    accounts,
+    refresh: (clearCache: boolean) => refreshCache(cacheKey, clearCache),
+  };
+}
+
 const MarketContext: React.Context<null | MarketContextValues> = React.createContext<null | MarketContextValues>(
   null,
 );
@@ -289,13 +185,13 @@ export function getMarketDetails(
   );
   const baseCurrency =
     (market?.baseMintAddress &&
-      mnttoken.find((token) => token.address.equals(market.baseMintAddress))
+      TOKEN_MINTS.find((token) => token.address.equals(market.baseMintAddress))
         ?.name) ||
     (marketInfo?.baseLabel && `${marketInfo?.baseLabel}*`) ||
     'UNKNOWN';
   const quoteCurrency =
     (market?.quoteMintAddress &&
-      mnttoken.find((token) => token.address.equals(market.quoteMintAddress))
+      TOKEN_MINTS.find((token) => token.address.equals(market.quoteMintAddress))
         ?.name) ||
     (marketInfo?.quoteLabel && `${marketInfo?.quoteLabel}*`) ||
     'UNKNOWN';
@@ -996,207 +892,208 @@ export function useWalletBalancesForAllMarkets(): {
   });
 }
 
-// export function useUnmigratedDeprecatedMarkets() {
-//   const connection = useConnection();
-//   const { accounts } = useUnmigratedOpenOrdersAccounts();
-//   const marketsList =
-//     accounts &&
-//     Array.from(new Set(accounts.map((openOrders) => openOrders.market)));
-//   const deps = marketsList && marketsList.map((m) => m.toBase58());
+export function useUnmigratedDeprecatedMarkets() {
+  const connection = useConnection();
+  const { accounts } = useUnmigratedOpenOrdersAccounts();
+  const marketsList =
+    accounts &&
+    Array.from(new Set(accounts.map((openOrders) => openOrders.market)));
+  const deps = marketsList && marketsList.map((m) => m.toBase58());
 
-//   const useUnmigratedDeprecatedMarketsInner = async () => {
-//     if (!marketsList) {
-//       return null;
-//     }
-//     const getMarket = async (address) => {
-//       const marketInfo = USE_MARKETS.find((market) =>
-//         market.address.equals(address),
-//       );
-//       if (!marketInfo) {
-//         console.log('Failed loading market');
-//         notify({
-//           message: 'Error loading market',
-//           type: 'error',
-//         });
-//         return null;
-//       }
-//       try {
-//         console.log('Loading market', marketInfo.name);
-//         // NOTE: Should this just be cached by (connection, marketInfo.address, marketInfo.programId)?
-//         return await Market.load(
-//           connection,
-//           marketInfo.address,
-//           {},
-//           marketInfo.programId,
-//         );
-//       } catch (e) {
-//         console.log('Failed loading market', marketInfo.name, e);
-//         notify({
-//           message: 'Error loading market',
-//           description: e.message,
-//           type: 'error',
-//         });
-//         return null;
-//       }
-//     };
-//     return (await Promise.all(marketsList.map(getMarket))).filter((x) => x);
-//   };
-//   const [markets] = useAsyncData(
-//     useUnmigratedDeprecatedMarketsInner,
-//     tuple(
-//       'useUnmigratedDeprecatedMarketsInner',
-//       connection,
-//       deps && deps.toString(),
-//     ),
-//     { refreshInterval: _VERY_SLOW_REFRESH_INTERVAL },
-//   );
-//   if (!markets) {
-//     return null;
-//   }
-//   return markets.map((market) => ({
-//     market,
-//     openOrdersList: accounts?.filter(
-//       (openOrders) => market && openOrders.market.equals(market.address),
-//     ),
-//   }));
-// }
+  const useUnmigratedDeprecatedMarketsInner = async () => {
+    if (!marketsList) {
+      return null;
+    }
+    const getMarket = async (address) => {
+      const marketInfo = USE_MARKETS.find((market) =>
+        market.address.equals(address),
+      );
+      if (!marketInfo) {
+        console.log('Failed loading market');
+        notify({
+          message: 'Error loading market',
+          type: 'error',
+        });
+        return null;
+      }
+      try {
+        console.log('Loading market', marketInfo.name);
+        // NOTE: Should this just be cached by (connection, marketInfo.address, marketInfo.programId)?
+        return await Market.load(
+          connection,
+          marketInfo.address,
+          {},
+          marketInfo.programId,
+        );
+      } catch (e) {
+        console.log('Failed loading market', marketInfo.name, e);
 
-// export function useGetOpenOrdersForDeprecatedMarkets(): {
-//   openOrders: OrderWithMarketAndMarketName[] | null | undefined;
-//   loaded: boolean;
-//   refreshOpenOrders: () => void;
-// } {
-//   const { connected, wallet } = useWallet();
-//   const { customMarkets } = useCustomMarkets();
-//   const connection = useConnection();
-//   const marketsAndOrders = useUnmigratedDeprecatedMarkets();
-//   const marketsList =
-//     marketsAndOrders && marketsAndOrders.map(({ market }) => market);
+        notify({
+          message: 'Error loading market',
+          description: e.message,
+          type: 'error',
+        });
+        return null;
+      }
+    };
+    return (await Promise.all(marketsList.map(getMarket))).filter((x) => x);
+  };
+  const [markets] = useAsyncData(
+    useUnmigratedDeprecatedMarketsInner,
+    tuple(
+      'useUnmigratedDeprecatedMarketsInner',
+      connection,
+      deps && deps.toString(),
+    ),
+    { refreshInterval: _VERY_SLOW_REFRESH_INTERVAL },
+  );
+  if (!markets) {
+    return null;
+  }
+  return markets.map((market) => ({
+    market,
+    openOrdersList: accounts?.filter(
+      (openOrders) => market && openOrders.market.equals(market.address),
+    ),
+  }));
+}
 
-//   // This isn't quite right: open order balances could change
-//   const deps =
-//     marketsList &&
-//     marketsList
-//       .filter((market): market is Market => !!market)
-//       .map((market) => market.address.toBase58());
+export function useGetOpenOrdersForDeprecatedMarkets(): {
+  openOrders: OrderWithMarketAndMarketName[] | null | undefined;
+  loaded: boolean;
+  refreshOpenOrders: () => void;
+} {
+  const { connected, wallet } = useWallet();
+  const { customMarkets } = useCustomMarkets();
+  const connection = useConnection();
+  const marketsAndOrders = useUnmigratedDeprecatedMarkets();
+  const marketsList =
+    marketsAndOrders && marketsAndOrders.map(({ market }) => market);
 
-//   async function getOpenOrdersForDeprecatedMarkets() {
-//     if (!connected || !wallet) {
-//       return null;
-//     }
-//     if (!marketsList) {
-//       return null;
-//     }
-//     console.log('refreshing getOpenOrdersForDeprecatedMarkets');
-//     const getOrders = async (market: Market | null) => {
-//       if (!market) {
-//         return null;
-//       }
-//       const { marketName } = getMarketDetails(market, customMarkets);
-//       try {
-//         console.log('Fetching open orders for', marketName);
-//         // Can do better than this, we have the open orders accounts already
-//         return (
-//           await market.loadOrdersForOwner(connection, wallet.publicKey)
-//         ).map((order) => ({ marketName, market, ...order }));
-//       } catch (e) {
-//         console.log('Failed loading open orders', market.address.toBase58(), e);
-//         notify({
-//           message: `Error loading open orders for deprecated ${marketName}`,
-//           description: e.message,
-//           type: 'error',
-//         });
-//         return null;
-//       }
-//     };
-//     return (await Promise.all(marketsList.map(getOrders)))
-//       .filter((x): x is OrderWithMarketAndMarketName[] => !!x)
-//       .flat();
-//   }
+  // This isn't quite right: open order balances could change
+  const deps =
+    marketsList &&
+    marketsList
+      .filter((market): market is Market => !!market)
+      .map((market) => market.address.toBase58());
 
-//   const cacheKey = tuple(
-//     'getOpenOrdersForDeprecatedMarkets',
-//     connected,
-//     connection,
-//     wallet,
-//     deps && deps.toString(),
-//   );
-//   const [openOrders, loaded] = useAsyncData(
-//     getOpenOrdersForDeprecatedMarkets,
-//     cacheKey,
-//     {
-//       refreshInterval: _VERY_SLOW_REFRESH_INTERVAL,
-//     },
-//   );
-//   console.log('openOrders', openOrders);
-//   return {
-//     openOrders,
-//     loaded,
-//     refreshOpenOrders: () => refreshCache(cacheKey),
-//   };
-// }
+  async function getOpenOrdersForDeprecatedMarkets() {
+    if (!connected || !wallet) {
+      return null;
+    }
+    if (!marketsList) {
+      return null;
+    }
+    console.log('refreshing getOpenOrdersForDeprecatedMarkets');
+    const getOrders = async (market: Market | null) => {
+      if (!market) {
+        return null;
+      }
+      const { marketName } = getMarketDetails(market, customMarkets);
+      try {
+        console.log('Fetching open orders for', marketName);
+        // Can do better than this, we have the open orders accounts already
+        return (
+          await market.loadOrdersForOwner(connection, wallet.publicKey)
+        ).map((order) => ({ marketName, market, ...order }));
+      } catch (e) {
+        console.log('Failed loading open orders', market.address.toBase58(), e);
+        notify({
+          message: `Error loading open orders for deprecated ${marketName}`,
+          description: e.message,
+          type: 'error',
+        });
+        return null;
+      }
+    };
+    return (await Promise.all(marketsList.map(getOrders)))
+      .filter((x): x is OrderWithMarketAndMarketName[] => !!x)
+      .flat();
+  }
 
-// export function useBalancesForDeprecatedMarkets() {
-//   const markets = useUnmigratedDeprecatedMarkets();
-//   const [customMarkets] = useLocalStorageState<CustomMarketInfo[]>(
-//     'customMarkets',
-//     [],
-//   );
-//   if (!markets) {
-//     return null;
-//   }
+  const cacheKey = tuple(
+    'getOpenOrdersForDeprecatedMarkets',
+    connected,
+    connection,
+    wallet,
+    deps && deps.toString(),
+  );
+  const [openOrders, loaded] = useAsyncData(
+    getOpenOrdersForDeprecatedMarkets,
+    cacheKey,
+    {
+      refreshInterval: _VERY_SLOW_REFRESH_INTERVAL,
+    },
+  );
+  console.log('openOrders', openOrders);
+  return {
+    openOrders,
+    loaded,
+    refreshOpenOrders: () => refreshCache(cacheKey),
+  };
+}
 
-//   const openOrderAccountBalances: DeprecatedOpenOrdersBalances[] = [];
-//   markets.forEach(({ market, openOrdersList }) => {
-//     const { baseCurrency, quoteCurrency, marketName } = getMarketDetails(
-//       market,
-//       customMarkets,
-//     );
-//     if (!baseCurrency || !quoteCurrency || !market) {
-//       return;
-//     }
-//     (openOrdersList || []).forEach((openOrders) => {
-//       const inOrdersBase =
-//         openOrders?.baseTokenTotal &&
-//         openOrders?.baseTokenFree &&
-//         market.baseSplSizeToNumber(
-//           openOrders.baseTokenTotal.sub(openOrders.baseTokenFree),
-//         );
-//       const inOrdersQuote =
-//         openOrders?.quoteTokenTotal &&
-//         openOrders?.quoteTokenFree &&
-//         market.baseSplSizeToNumber(
-//           openOrders.quoteTokenTotal.sub(openOrders.quoteTokenFree),
-//         );
-//       const unsettledBase =
-//         openOrders?.baseTokenFree &&
-//         market.baseSplSizeToNumber(openOrders.baseTokenFree);
-//       const unsettledQuote =
-//         openOrders?.quoteTokenFree &&
-//         market.baseSplSizeToNumber(openOrders.quoteTokenFree);
+export function useBalancesForDeprecatedMarkets() {
+  const markets = useUnmigratedDeprecatedMarkets();
+  const [customMarkets] = useLocalStorageState<CustomMarketInfo[]>(
+    'customMarkets',
+    [],
+  );
+  if (!markets) {
+    return null;
+  }
 
-//       openOrderAccountBalances.push({
-//         marketName,
-//         market,
-//         coin: baseCurrency,
-//         key: `${marketName}${baseCurrency}`,
-//         orders: inOrdersBase,
-//         unsettled: unsettledBase,
-//         openOrders,
-//       });
-//       openOrderAccountBalances.push({
-//         marketName,
-//         market,
-//         coin: quoteCurrency,
-//         key: `${marketName}${quoteCurrency}`,
-//         orders: inOrdersQuote,
-//         unsettled: unsettledQuote,
-//         openOrders,
-//       });
-//     });
-//   });
-//   return openOrderAccountBalances;
-// }
+  const openOrderAccountBalances: DeprecatedOpenOrdersBalances[] = [];
+  markets.forEach(({ market, openOrdersList }) => {
+    const { baseCurrency, quoteCurrency, marketName } = getMarketDetails(
+      market,
+      customMarkets,
+    );
+    if (!baseCurrency || !quoteCurrency || !market) {
+      return;
+    }
+    (openOrdersList || []).forEach((openOrders) => {
+      const inOrdersBase =
+        openOrders?.baseTokenTotal &&
+        openOrders?.baseTokenFree &&
+        market.baseSplSizeToNumber(
+          openOrders.baseTokenTotal.sub(openOrders.baseTokenFree),
+        );
+      const inOrdersQuote =
+        openOrders?.quoteTokenTotal &&
+        openOrders?.quoteTokenFree &&
+        market.baseSplSizeToNumber(
+          openOrders.quoteTokenTotal.sub(openOrders.quoteTokenFree),
+        );
+      const unsettledBase =
+        openOrders?.baseTokenFree &&
+        market.baseSplSizeToNumber(openOrders.baseTokenFree);
+      const unsettledQuote =
+        openOrders?.quoteTokenFree &&
+        market.baseSplSizeToNumber(openOrders.quoteTokenFree);
+
+      openOrderAccountBalances.push({
+        marketName,
+        market,
+        coin: baseCurrency,
+        key: `${marketName}${baseCurrency}`,
+        orders: inOrdersBase,
+        unsettled: unsettledBase,
+        openOrders,
+      });
+      openOrderAccountBalances.push({
+        marketName,
+        market,
+        coin: quoteCurrency,
+        key: `${marketName}${quoteCurrency}`,
+        orders: inOrdersQuote,
+        unsettled: unsettledQuote,
+        openOrders,
+      });
+    });
+  });
+  return openOrderAccountBalances;
+}
 
 export function getMarketInfos(
   customMarkets: CustomMarketInfo[],

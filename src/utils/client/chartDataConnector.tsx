@@ -5,8 +5,6 @@ import {
   useMarkPrice,
   useSelectedTokenAccounts,
   MarketProvider,
-  getTradePageUrl,
-  getTokenSymbolImageUrl
 } from '../markets';
 import {Market, MARKETS, OpenOrders, Orderbook, TOKEN_MINTS, TokenInstructions,} from '@project-serum/serum';
 
