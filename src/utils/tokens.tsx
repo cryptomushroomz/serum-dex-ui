@@ -8,7 +8,7 @@ import {getMultipleSolanaAccounts} from './send';
 import {useConnection} from './connection';
 import {useAsyncData} from './fetch-loop';
 import tuple from 'immutable-tuple';
-import BN from 'bn.js';
+import {Big}  from "big.js";
 import {useMemo} from 'react';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -32,19 +32,19 @@ export const MINT_LAYOUT = BufferLayout.struct([
 
 export function parseTokenAccountData(
   data: Buffer,
-): { mint: PublicKey; owner: PublicKey; amount: number } {
+): { mint: PublicKey; owner: PublicKey; amount: Big } {
   let { mint, owner, amount } = ACCOUNT_LAYOUT.decode(data);
   return {
     mint: new PublicKey(mint),
     owner: new PublicKey(owner),
-    amount,
+    amount: new Big(amount),
   };
 }
 
 export interface MintInfo {
   decimals: number;
   initialized: boolean;
-  supply: BN;
+  supply: Big;
 }
 
 export function parseTokenMintData(data): MintInfo {
@@ -52,7 +52,7 @@ export function parseTokenMintData(data): MintInfo {
   return {
     decimals,
     initialized: !!initialized,
-    supply: new BN(supply, 10, 'le'),
+    supply: new Big(supply, 10, 'le'),
   };
 }
 
