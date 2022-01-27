@@ -9,6 +9,7 @@ import {useConnection} from './connection';
 import {useAsyncData} from './fetch-loop';
 import tuple from 'immutable-tuple';
 import {Big}  from "big.js";
+import BN from 'bn.js';
 import {useMemo} from 'react';
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -44,7 +45,7 @@ export function parseTokenAccountData(
 export interface MintInfo {
   decimals: number;
   initialized: boolean;
-  supply: Big;
+  supply: BN;
 }
 
 export function parseTokenMintData(data): MintInfo {
@@ -52,7 +53,7 @@ export function parseTokenMintData(data): MintInfo {
   return {
     decimals,
     initialized: !!initialized,
-    supply: new Big(supply, 10, 'le'),
+    supply: new BN(supply, 10, 'le'),
   };
 }
 
