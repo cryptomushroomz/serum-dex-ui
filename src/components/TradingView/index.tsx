@@ -34,12 +34,35 @@ export interface ChartContainerState {}
 
 export const TVChartContainer = () => {
   // let datafeed = useTvDataFeed();
+  
+  // Get data from localstorage
+  let arr_theme = {mode: 'dark'};
+  const theme_strg = localStorage.getItem('theme');
+  if (theme_strg) {
+    arr_theme = (JSON.parse(theme_strg));
+  }
+  const [theme, setheme] = React.useState(arr_theme);
+
+  React.useEffect(() => {
+    const intervalId = setInterval(() => {
+      const saved_theme = localStorage.getItem('theme');
+      if (saved_theme) {
+        if(JSON.parse(saved_theme).mode !== theme.mode) {
+          setheme(JSON.parse(saved_theme));
+        }
+      }
+    }, 3000);
+    return () => {
+      clearInterval(intervalId); //This is important
+    }
+  }, [theme]);
+
   const defaultProps: ChartContainerProps = {
     symbol: 'BTC/USDC',
     // @ts-ignore
     interval: '60',
     auto_save_delay: 5,
-    theme: 'Dark',
+    theme: theme.mode,
     containerId: 'tv_chart_container',
     // datafeed: datafeed,
     libraryPath: '/charting_library/',
@@ -64,13 +87,14 @@ export const TVChartContainer = () => {
     const savedProperties = flatten(chartProperties, {
       restrictTo: ['scalesProperties', 'paneProperties', 'tradingProperties'],
     });
-
-    const bg = '#222c35';
+    const bg_toolbar = defaultProps.theme === 'dark' ? '#1a1a1a' : '#ffffff00';
+    const bg = defaultProps.theme === 'dark' ? '#1a1a1a' : '#fff';
+    const color = defaultProps.theme === 'dark' ? '#fff' : '#000';
     const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol:
         USE_MARKETS.find(
           (m) => m.address.toBase58() === market?.publicKey.toBase58(),
-        )?.name || 'SRM/USDC',
+        )?.name || 'SOL/USDC',
       // BEWARE: no trailing slash is expected in feed URL
       // tslint:disable-next-line:no-any
       // @ts-ignore
@@ -83,9 +107,10 @@ export const TVChartContainer = () => {
       container_id: defaultProps.containerId as ChartingLibraryWidgetOptions['container_id'],
       library_path: defaultProps.libraryPath as string,
       auto_save_delay: 5,
-
       locale: 'en',
-      disabled_features: ['use_localstorage_for_settings'],
+      disabled_features: [
+        'use_localstorage_for_settings',
+      ],
       enabled_features: ['study_templates'],
       load_last_chart: true,
       client_id: defaultProps.clientId,
@@ -93,19 +118,22 @@ export const TVChartContainer = () => {
       fullscreen: defaultProps.fullscreen,
       autosize: defaultProps.autosize,
       studies_overrides: defaultProps.studiesOverrides,
-      theme: defaultProps.theme === 'Dark' ? 'Dark' : 'Light',
+      theme: defaultProps.theme === 'dark' ? 'Dark' : 'Light',
+      toolbar_bg: bg_toolbar,
       overrides: {
         ...savedProperties,
         "paneProperties.background": bg,
         "paneProperties.backgroundType": "solid",
-	"paneProperties.crossHairProperties.color" : "#41C77A",
-	'paneProperties.legendProperties.backgroundTransparency': true,
         'mainSeriesProperties.candleStyle.upColor': '#41C77A',
         'mainSeriesProperties.candleStyle.downColor': '#F23B69',
         'mainSeriesProperties.candleStyle.borderUpColor': '#41C77A',
         'mainSeriesProperties.candleStyle.borderDownColor': '#F23B69',
         'mainSeriesProperties.candleStyle.wickUpColor': '#41C77A',
         'mainSeriesProperties.candleStyle.wickDownColor': '#F23B69',
+        "scalesProperties.textColor": color,
+      },
+      loading_screen: {
+        backgroundColor: "transparent",
       },
       // @ts-ignore
       save_load_adapter: saveLoadAdapter,
@@ -141,15 +169,16 @@ export const TVChartContainer = () => {
     };
 
     const tvWidget = new widget(widgetOptions);
-
     tvWidget.onChartReady(() => {
+      //tvWidget.addCustomCSSFile('css/my-custom-css.css')
       tvWidgetRef.current = tvWidget;
+      //tvWidgetRef.current.chart().setChartType(3);
       tvWidget
         // @ts-ignore
         .subscribe('onAutoSaveNeeded', () => tvWidget.saveChartToServer());
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [market, tvWidgetRef.current]);
+  }, [marketAddress, theme]);
 
-    return <div id={defaultProps.containerId} className={'TVChartContainer'}  />;
+  return <div id={defaultProps.containerId} className={'TVChartContainer'} />;
 };

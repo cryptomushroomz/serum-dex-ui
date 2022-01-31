@@ -150,6 +150,30 @@
         "deprecated": false,
         "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
         "mintAddress": "ALKiRVrfLgzeAV2mCT7cJHKg3ZoPvsCRSV7VCRWnE8zQ"
+    },
+    {
+        "name": "HIMA/USDC",
+        "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/72hgmvS5zFxaFJfMizq6Gp4gjBqXjTPyX9GDP38krorQ/logo.png",
+        "address": "HCE4wQXApNyFBTK7gYa98QCYbshCz7EkH8axNz3ahvKc",
+        "deprecated": false,
+        "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+        "mintAddress": "72hgmvS5zFxaFJfMizq6Gp4gjBqXjTPyX9GDP38krorQ"
+    },
+    {
+        "name": "FREN/USDC",
+        "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7xd71KP4HwQ4sM936xL8JQZCwE4amUko1AdCCf6Znjrt/logo.png",
+        "address": "GmaUDJpPgmLq67VqQbwqhdFo6qFZ28YWJZZDumb2gtFD",
+        "deprecated": false,
+        "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+        "mintAddress": "7xd71KP4HwQ4sM936xL8JQZCwE4amUko1AdCCf6Znjrt"
+    },
+    {
+        "name": "HIPPO/USDC",
+        "image": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y/logo.png",
+        "address": "HnLKrfMN64ccSbYCj4DxjgPYveSkFujYrnMr4cvPfL8",
+        "deprecated": false,
+        "programId": "9xQeWvG816bUx9EPjHmaT23yvVM2ZWbrrpZb9PusVFin",
+        "mintAddress": "3EkHyexJLGCvSxzn5umbtd9N69GoT4p5pfdLTFqCNP9Y"
     }
 
 ]

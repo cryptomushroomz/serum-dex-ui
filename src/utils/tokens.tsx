@@ -33,12 +33,12 @@ export const MINT_LAYOUT = BufferLayout.struct([
 
 export function parseTokenAccountData(
   data: Buffer,
-): { mint: PublicKey; owner: PublicKey; amount: Big } {
+): { mint: PublicKey; owner: PublicKey; amount: number } {
   let { mint, owner, amount } = ACCOUNT_LAYOUT.decode(data);
   return {
     mint: new PublicKey(mint),
     owner: new PublicKey(owner),
-    amount: new Big(amount),
+    amount,
   };
 }
 
